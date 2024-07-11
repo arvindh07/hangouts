@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import { User } from "../schema/userSchema.js";
 
 export const loginHandler = (req, res, next) => {
-    console.log("inc user", req.user);
     return res.status(200).json({
         msg: "Login controller"
     })
