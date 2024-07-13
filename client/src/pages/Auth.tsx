@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { handleLoginApi, handleRegisterApi } from "../api/login";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { appActions } from "../store/slices/rootSlice";
 
 interface AuthStateInterface {
   username?: string;
   email: string;
   password: string
 }
+
 const Auth = () => {
   const [authDetails, setAuthDetails] = useState<AuthStateInterface>({} as AuthStateInterface);
-  const [loginForm, _] = useState<boolean>(false);
+  const [loginForm, _] = useState<boolean>(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -26,8 +30,10 @@ const Auth = () => {
     if(loginForm){
       const response = await handleLoginApi({ email: authDetails?.email, password: authDetails?.password });
       if(response.status === "OK") {
+        dispatch(appActions.setLogin(true));
         navigate("/");
       } else {
+        dispatch(appActions.setLogin(false));
         alert("Login Failed")
       }
     } else {
@@ -37,8 +43,10 @@ const Auth = () => {
         password: authDetails?.password 
       });
       if(response.status === "OK") {
+        dispatch(appActions.setLogin(true));
         navigate("/");
       } else {
+        dispatch(appActions.setLogin(false));
         alert("Registration Failed")
       }
     }

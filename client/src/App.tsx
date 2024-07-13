@@ -1,11 +1,12 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
-import { useState } from "react";
 import Redirect from "./pages/Redirect";
+import { useSelector } from "react-redux";
+import { RootState } from "./store/store";
 
 function App() {
-  const [userLoggedIn, _] = useState<boolean>(false);
+  const userLoggedIn = useSelector((state: RootState) => state.app.isLoggedIn);
 
   const router = createBrowserRouter([
     {

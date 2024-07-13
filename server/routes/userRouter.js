@@ -9,8 +9,10 @@ const userRouter = Router();
 
 userRouter.post("/login", passport.authenticate('local'), loginHandler);
 userRouter.post("/register", checkSchema(registerUserSchema), registerHandler);
-userRouter.get("/", checkAuthStatus, (req, res) => {
-    return res.send("<h1>Home page</h1>");
+userRouter.get("/status", checkAuthStatus, (req, res) => {
+    return res.json({
+        msg: "You are a valid user"
+    });
 })
 
 export default userRouter;
