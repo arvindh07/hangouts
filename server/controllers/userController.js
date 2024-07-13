@@ -1,6 +1,6 @@
 import { matchedData, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
-import { User } from "../schema/userSchema.js";
+import { User } from "../models/userSchema.js";
 
 export const loginHandler = (req, res, next) => {
     return res.status(200).json({
