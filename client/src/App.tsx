@@ -1,11 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./app_components/Home";
-import Auth from "./app_components/Auth";
+import Home from "./pages/Home";
+import Auth from "./pages/Auth";
 import { useState } from "react";
-import Redirect from "./app_components/Redirect";
+import Redirect from "./pages/Redirect";
 
 function App() {
-  const [userLoggedIn, _] = useState<boolean>(true);
+  const [userLoggedIn, _] = useState<boolean>(false);
 
   const router = createBrowserRouter([
     {

@@ -4,11 +4,11 @@ import { Outlet, useNavigate } from "react-router-dom"
 interface RedirectProps {
     user: boolean
 }
-const Redirect = ({user}: RedirectProps) => {
+const Redirect = ({ user }: RedirectProps) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(!user){
+        if (!user) {
             navigate("/auth")
         } else {
             navigate("/")
