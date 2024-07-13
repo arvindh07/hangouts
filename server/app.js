@@ -2,12 +2,13 @@ import express from "express";
 import userRouter from "./routes/userRouter.js";
 import passport from "passport";
 import expressSession from "express-session";
-import mongoose from "mongoose";
 import MongoStore from "connect-mongo";
+import cors from "cors";
 import "./passport-auth/local/passport-local.js";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(expressSession(({
     secret: process.env.SESSION_SECRET,
