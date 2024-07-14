@@ -1,41 +1,25 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { socket } from "../pages/Home"
 
 const MessageSection = () => {
-    const [messages, _] = useState([
-        {
-            "me": "Hello!"
-        },
-        {
-            "friend": "Hi Arvindh!"
-        },
-        {
-            "me": "Whats up"
-        },
-        {
-            "friend": "Nothing much. Just surfing"
-        },
-        {
-            "friend2": "What are you doing?"
-        }
-    ])
+    const [messages, setMessages] = useState<string[]>([])
+
+    useEffect(() => {
+        socket.on("serverMessage", (message: string) => {
+            setMessages((prev) => ([...prev, message]));
+        })
+    }, [])
 
     return (
         <div className="h-4/5">
-            {messages?.map((msg: any) => {
-                let sender;
-                let message;
+            {messages?.map((msg: any, index: number) => {
                 return (
                     <div className={`flex flex-col`}>
-                        {Object.keys(msg)?.map((k: string) => {
-                            sender = k;
-                            message = msg[k];
-                            return (
-                                <div 
-                                    className={`inline-block bg-blue-100 mb-2 rounded-md p-2 px-4 ${sender === "me" ? "ml-auto" : "mr-auto"}`}>
-                                    {message}
-                                </div>
-                            )
-                        })}
+                        <div
+                            key={index}
+                            className={`inline-block bg-blue-100 mb-2 rounded-md p-2 px-4`}>
+                            {msg}
+                        </div>
                     </div>
                 )
             })}
