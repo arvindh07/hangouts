@@ -1,12 +1,11 @@
 import express from "express";
 import passport from "passport";
-import expressSession from "express-session";
-import MongoStore from "connect-mongo";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
 import userRouter from "./routes/userRouter.js";
 import "./passport-auth/local/passport-local.js";
+import sessionMiddleware from "./middlewares/session.js";
 
 // 1. initialization
 const app = express();
@@ -18,30 +17,42 @@ const io = new Server(server, {
     }
 });
 
+// users list
+const usersList = {
+    // "id1": {
+    //     username: "arvindh",
+    //     socket: {}
+    // }
+}
+
 // 2. middlewares
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
 }));
 app.use(express.json());
-app.use(expressSession(({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 5 * 60 * 1000
-    },
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URL
-    })
-})));
-
+app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
+
+io.engine.use(sessionMiddleware);
 
 // 3. socket implementation
 io.on("connection", (client) => {
     console.log("A new user connected ", client.id, "✅");
+    console.log("req", client.request.session?.passport);
+
+    // set user
+    const userId = client.request.session?.passport?.user;
+    if (!userId) {
+        throw Error("User not found");
+    } else {
+        usersList[userId] = {
+            username: "Arvindh",
+            socketId: client?.id,
+            socket: client
+        }
+    }
 
     client.on("clientMessage", (msg) => {
         console.log("Message received from client: ", msg);

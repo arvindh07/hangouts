@@ -11,7 +11,8 @@ const Home = () => {
 
   useEffect(() => {
     socket = io("http://localhost:6999", {
-      reconnectionAttempts: 5
+      reconnectionAttempts: 5,
+      withCredentials: true
     });
 
     socket.on("connect", () => {
