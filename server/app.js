@@ -35,10 +35,10 @@ io.engine.use(sessionMiddleware);
 // 3. socket implementation
 io.on("connection", (client) => {
     console.log("A new user connected ", client.id, "✅");
-    console.log("req", client.request.session?.passport);
 
     // set user
     const user = client.request.session?.passport?.user;
+    let sendUsers = {};
     if (!user?.id) {
         // need to handle later
     } else {
@@ -47,11 +47,19 @@ io.on("connection", (client) => {
             socketId: client?.id,
             socket: client
         }
+        // send users list to client
+        for (const key in usersList) {
+            sendUsers[key] = usersList?.[key]?.username;
+        }
+
     }
-    console.log("users -> ", usersList);
+    console.log("users ** -> ", sendUsers);
+    client.emit("userData", JSON.stringify({sendUsers, currentId: user?.id}));
+    // console.log("users -> ", usersList);
     client.on("clientMessage", (msg) => {
         console.log("Message received from client: ", msg);
-        io.emit("serverMessage", msg);
+        const otherPerson = usersList["6692123612b4f7f534dd922b"];
+        otherPerson?.socket?.emit("serverMessage", msg);
     })
 
     // disconnect
