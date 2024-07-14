@@ -5,5 +5,5 @@ const PORT = process.env.PORT || 6999;
 
 await connectToDb();
 app.listen(PORT, () => {
-    console.log("Connected to db and Server is running...");
+    console.log(`Connected to db and Server is running on port ${PORT}...`);
 })

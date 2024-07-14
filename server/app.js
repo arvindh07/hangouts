@@ -4,7 +4,7 @@ import expressSession from "express-session";
 import MongoStore from "connect-mongo";
 import cors from "cors";
 import http from "http";
-import {Server} from "socket.io";
+import { Server } from "socket.io";
 import userRouter from "./routes/userRouter.js";
 import "./passport-auth/local/passport-local.js";
 
@@ -19,14 +19,17 @@ const io = new Server(server, {
 });
 
 // 2. middlewares
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 app.use(express.json());
 app.use(expressSession(({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 60 * 2 * 1000
+        maxAge: 5 * 60 * 1000
     },
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URL
@@ -40,8 +43,10 @@ app.use(passport.session());
 io.on("connection", (client) => {
     console.log("A new user connected ", client.id, "✅");
 
-    // emit a welcome msg
-    client.emit("message", "Welcome to hangouts🚀")
+    client.on("clientMessage", (msg) => {
+        console.log("Message received from client: ", msg);
+        io.emit("serverMessage", msg);
+    })
 
     // disconnect
     client.on("disconnect", () => {
@@ -55,4 +60,4 @@ app.get("/", (_, res) => {
     return res.send("<h1>Welcome to Hangouts backend</h1>");
 })
 
-export default app;
+export default server;
