@@ -1,16 +1,21 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Navbar from "../page_components/Navbar"
 import ChatList from "./ChatList"
 import ChatSection from "./ChatSection"
-import { io } from "socket.io-client"
+import { io, Socket } from "socket.io-client"
 
-export const socket = io("http://localhost:6999", {
-  reconnectionAttempts: 5
-});
+export let socket: Socket;
 
 const Home = () => {
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
+    socket = io("http://localhost:6999", {
+      reconnectionAttempts: 5
+    });
+
     socket.on("connect", () => {
+      setLoading(false);
       console.log("Connected to server✅");
     })
 
@@ -22,6 +27,11 @@ const Home = () => {
       socket.off()
     })
   }, [])
+
+  // put a skeleton later
+  if (loading) {
+    return <h1>Loading...</h1>
+  }
 
   return (
     <div className="flex h-screen">
