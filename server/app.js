@@ -18,12 +18,7 @@ const io = new Server(server, {
 });
 
 // users list
-const usersList = {
-    // "id1": {
-    //     username: "arvindh",
-    //     socket: {}
-    // }
-}
+const usersList = {}
 
 // 2. middlewares
 app.use(cors({
@@ -43,17 +38,17 @@ io.on("connection", (client) => {
     console.log("req", client.request.session?.passport);
 
     // set user
-    const userId = client.request.session?.passport?.user;
-    if (!userId) {
-        throw Error("User not found");
+    const user = client.request.session?.passport?.user;
+    if (!user?.id) {
+        // need to handle later
     } else {
-        usersList[userId] = {
-            username: "Arvindh",
+        usersList[user?.id] = {
+            username: user?.username,
             socketId: client?.id,
             socket: client
         }
     }
-
+    console.log("users -> ", usersList);
     client.on("clientMessage", (msg) => {
         console.log("Message received from client: ", msg);
         io.emit("serverMessage", msg);

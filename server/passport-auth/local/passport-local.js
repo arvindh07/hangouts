@@ -23,10 +23,10 @@ const localStrategy = new Strategy({ usernameField: "email" }, async (username, 
 passport.use(localStrategy);
 
 passport.serializeUser((user, done) => {
-    done(null, user._id)
+    done(null, { id: user._id, username: user.username })
 })
 
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async ({ id, username }, done) => {
     const user = await User.findById(id);
     if (!user) {
         return res.status(401).json({
