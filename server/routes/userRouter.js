@@ -5,7 +5,7 @@ import registerUserSchema from "../validation/authentication.js";
 
 const userRouter = Router();
 
-userRouter.post("/login", loginHandler);
 userRouter.post("/register", checkSchema(registerUserSchema), registerHandler);
+userRouter.post("/login", loginHandler);
 
 export default userRouter;
