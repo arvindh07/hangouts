@@ -1,14 +1,7 @@
-import { useEffect, useState } from "react"
-import { socket } from "../pages/Home"
+import { useState } from "react"
 
 const MessageSection = () => {
     const [messages, setMessages] = useState<string[]>([])
-
-    useEffect(() => {
-        socket.on("serverMessage", (message: string) => {
-            setMessages((prev) => ([...prev, message]));
-        })
-    }, [])
 
     return (
         <div className="h-4/5">

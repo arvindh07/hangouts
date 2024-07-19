@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import userRouter from "./routes/userRouter.js";
+import path from "path";
 
 // 1. initialization
 const app = express();
@@ -13,6 +14,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+app.use(express.static("public"));
 
 // 4. routes
 app.use("/api/user", userRouter);

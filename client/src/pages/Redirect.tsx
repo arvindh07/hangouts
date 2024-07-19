@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom"
 import axiosInstance from "../api/axios";
 import { useDispatch } from "react-redux";
 import { appActions } from "../store/slices/rootSlice";
+import { ToggleTheme } from "./ToggleTheme";
 
 interface RedirectProps {
     user: boolean
@@ -26,15 +27,22 @@ const Redirect = ({ user }: RedirectProps) => {
         }
     }
 
-    useEffect(() => {
-        if (!user) {
-            checkStatus();
-        } else {
-            navigate("/")
-        }
-    }, [])
+    // useEffect(() => {
+    //     if (!user) {
+    //         checkStatus();
+    //     } else {
+    //         navigate("/")
+    //     }
+    // }, [])
 
-    return <Outlet />
+    return <div className="overflow-hidden h-screen">
+        <div className="absolute bottom-12 right-12">
+            <ToggleTheme />
+        </div>
+        <div className="mt-8">
+            <Outlet />
+        </div>
+    </div>
 }
 
 export default Redirect

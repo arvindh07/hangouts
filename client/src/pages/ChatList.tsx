@@ -1,23 +1,8 @@
 import { useEffect, useState } from "react"
-import { socket } from "./Home"
 
 
 const ChatList = () => {
     const [friendsList, setFriendsList] = useState<string[]>([])
-
-    useEffect(() => {
-        socket?.on("userData", (users) => {
-            const {sendUsers, currentId} = JSON.parse(users);
-            let newUsers: any = {};
-            for (const key in sendUsers) {
-                if(key !== currentId) {
-                    newUsers[key] = sendUsers[key];
-                }
-            }
-            const newFriends: string[] =  Object.values(newUsers);            
-            setFriendsList(newFriends);
-        })
-    }, [])
     
     if(friendsList?.length === 0) {
         return <h1>No friends😒</h1>

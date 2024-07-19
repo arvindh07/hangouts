@@ -3,33 +3,63 @@ import { handleLoginApi, handleRegisterApi } from "../api/login";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { appActions } from "../store/slices/rootSlice";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
+import axiosInstance from "../api/axios";
+import axios from "axios";
 
 interface AuthStateInterface {
   username?: string;
   email: string;
-  password: string
+  password: string;
+  profilePic?: string;
 }
 
 const Auth = () => {
   const [authDetails, setAuthDetails] = useState<AuthStateInterface>({} as AuthStateInterface);
-  const [loginForm, _] = useState<boolean>(true);
+  const [loginForm, setLoginForm] = useState<boolean>(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    
+    const { name, value } = e.target;
+
     setAuthDetails((prev) => ({
       ...prev,
       [name]: value
     }))
   }
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const pic = e.target.files?.[0];
+    if(pic?.type === "image/png" || pic?.type === "image/jpeg"){
+      const fileData = new FormData();
+      fileData.append("file", pic);
+      fileData.append("upload_preset", "hangouts");
+      const response = 
+        await axios.post(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`, fileData);
+      setAuthDetails((prev) => ({
+        ...prev,
+        profilePic: response?.data?.secure_url
+      }))
+    }
+  }
+
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    if(loginForm){
+    if (loginForm) {
       const response = await handleLoginApi({ email: authDetails?.email, password: authDetails?.password });
-      if(response.status === "OK") {
+      if (response.status === "OK") {
         dispatch(appActions.setLogin(true));
         navigate("/");
       } else {
@@ -37,12 +67,12 @@ const Auth = () => {
         alert("Login Failed")
       }
     } else {
-      const response = await handleRegisterApi({ 
+      const response = await handleRegisterApi({
         username: authDetails?.username,
-        email: authDetails?.email, 
-        password: authDetails?.password 
+        email: authDetails?.email,
+        password: authDetails?.password
       });
-      if(response.status === "OK") {
+      if (response.status === "OK") {
         dispatch(appActions.setLogin(true));
         navigate("/");
       } else {
@@ -53,43 +83,99 @@ const Auth = () => {
   }
 
   return (
-    <div className="border-2 bg-slate-100 flex flex-col h-screen items-center justify-center">
-      <h2 className="text-3xl mx-auto my-4">{loginForm ? "Login" : "Register"}</h2>
-      <div className="flex flex-col w-1/3 mx-auto">
-        {!loginForm && 
-          <input 
-            type="text" 
-            name="username" 
-            id="username" 
-            placeholder="Username"
-            value={authDetails?.username || ""}
-            onChange={(e) => handleChange(e)}
-            className="border-2 border-black rounded-md p-2 my-3"/>}
-        <input 
-          type="text" 
-          name="email" 
-          id="email" 
-          placeholder="Email"
-          value={authDetails?.email || ""}
-          onChange={(e) => handleChange(e)}
-          className="border-2 border-black rounded-md p-2 my-3"/>
-        <input 
-          type="password" 
-          name="password" 
-          id="password" 
-          placeholder="Password"
-          value={authDetails?.password || ""}
-          onChange={(e) => handleChange(e)}
-          autoComplete="off"
-          className="border-2 border-black rounded-md p-2 my-3" />
-        <button 
-          className="bg-black text-white inline-block w-fit mx-auto mt-2 px-3 py-1 rounded-md"
-          onClick={(e) => handleSubmit(e)}>
-            {loginForm ? "Login" : "Signup"}
-        </button>
-      </div>
+    <div className="h-screen mx-auto p-4 w-full overflow-hidden">
+      <Tabs defaultValue="login" className="w-[400px] mx-auto">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="login" onClick={() => setLoginForm(true)}>Login</TabsTrigger>
+          <TabsTrigger value="register" onClick={() => setLoginForm(false)}>Register</TabsTrigger>
+        </TabsList>
+        <TabsContent value="login" key={loginForm ? "login" : ""}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Welcome back to Hangouts🚀</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="space-y-1 mb-4">
+                <Label htmlFor="username">Username</Label>
+                <Input id="username" name="username" value={authDetails?.username} onChange={handleChange} />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="password">Password</Label>
+                <Input id="password" type="password" name="password" value={authDetails?.password} onChange={handleChange}/>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button onClick={handleSubmit}>Log in</Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+        <TabsContent value="register" key={!loginForm ? "register" : ""}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Create an account</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="space-y-1 mb-4">
+                <Label htmlFor="username">Username</Label>
+                <Input id="username" name="username" value={authDetails?.username} onChange={handleChange}/>
+              </div>
+              <div className="space-y-1 mb-4">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" name="email" value={authDetails?.email} onChange={handleChange}/>
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="password">Password</Label>
+                <Input id="password" name="password" type="password" value={authDetails?.password} onChange={handleChange}/>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="profilePic">Upload profile pic</Label>
+                <Input id="profilePic" name="profilePic" type="file" onChange={(e) => handleFileChange(e)} />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button onClick={handleSubmit}>Sign up</Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
 
+// <div className="border-2 bg-slate-100 flex flex-col h-screen items-center justify-center">
+//   <h2 className="text-3xl mx-auto my-4">{loginForm ? "Login" : "Register"}</h2>
+//   <div className="flex flex-col w-1/3 mx-auto">
+//     {!loginForm && 
+//       <input 
+//         type="text" 
+//         name="username" 
+//         id="username" 
+//         placeholder="Username"
+//         value={authDetails?.username || ""}
+//         onChange={(e) => handleChange(e)}
+//         className="border-2 border-black rounded-md p-2 my-3"/>}
+//     <input 
+//       type="text" 
+//       name="email" 
+//       id="email" 
+//       placeholder="Email"
+//       value={authDetails?.email || ""}
+//       onChange={(e) => handleChange(e)}
+//       className="border-2 border-black rounded-md p-2 my-3"/>
+//     <input 
+//       type="password" 
+//       name="password" 
+//       id="password" 
+//       placeholder="Password"
+//       value={authDetails?.password || ""}
+//       onChange={(e) => handleChange(e)}
+//       autoComplete="off"
+//       className="border-2 border-black rounded-md p-2 my-3" />
+//     <button 
+//       className="bg-black text-white inline-block w-fit mx-auto mt-2 px-3 py-1 rounded-md"
+//       onClick={(e) => handleSubmit(e)}>
+//         {loginForm ? "Login" : "Signup"}
+//     </button>
+//   </div>
+// </div>
 export default Auth

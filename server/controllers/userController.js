@@ -14,15 +14,15 @@ export const registerHandler = async (req, res, next) => {
     // 3 hash password
     // 4 create user
     const result = validationResult(req);
-    if(!result.isEmpty()) {
+    if (!result.isEmpty()) {
         return res.status(400).json({
             err: result.array()
         })
     }
     const validatedData = matchedData(req);
-    
+
     const findUser = await User.findOne({ email: validatedData.email });
-    if(findUser) {
+    if (findUser) {
         return res.status(400).json({
             msg: "User already exists"
         })
@@ -30,8 +30,29 @@ export const registerHandler = async (req, res, next) => {
 
     const hashPassword = await bcrypt.hash(validatedData.password, 10);
 
-    const newUser = await User.create({...validatedData, password: hashPassword});
+    const newUser = await User.create({ ...validatedData, password: hashPassword });
     return res.status(201).json({
         msg: `User created successfully for ${newUser.username}`
     })
+}
+
+export const getAllUsers = async (req, res, next) => {
+    const searchTerm = req.query?.search;
+    if (searchTerm) {
+        const searchedUsers = await User.find({
+            $or: [{
+                username: {
+                    $regex: `${searchTerm}`, $options: "i"
+                },
+            }, {
+                email: {
+                    $regex: `${searchTerm}`, $options: "i"
+                }
+            }]
+        });
+
+        return res.status(200).json(searchedUsers);
+    }
+    const users = await User.find();
+    return res.status(200).json(users)
 }

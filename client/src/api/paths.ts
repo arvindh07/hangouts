@@ -1,2 +1,2 @@
-export const LOGIN_ROUTE = "/login";
-export const REGISTER_ROUTE = "/register";
+export const LOGIN_ROUTE = "/user/login";
+export const REGISTER_ROUTE = "/user/register";
