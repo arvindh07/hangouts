@@ -1,10 +1,37 @@
 import { matchedData, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import { User } from "../models/userSchema.js";
+import { createToken } from "../middlewares/token.js";
 
-export const loginHandler = (req, res, next) => {
+export const loginHandler = async (req, res, next) => {
+    const {email, password} = req.body;
+    if(!email || !password){
+        return res.status(400).json({
+            err: "All fields are required"
+        })
+    }
+    // check if user exists
+    const user = await User.findOne({
+        email: email
+    })
+    if(!user){
+        return res.status(400).json({
+            err: "User doesnt exists. Please create a new one"
+        })
+    }
+    // match password
+    const matchPassword = await bcrypt.compare(password, user.password);
+    if(!matchPassword){
+        return res.status(400).json({
+            err: "Password doesn't match"
+        })
+    }
+    // create token
+    const token = createToken(user.id);
+    // return token
     return res.status(200).json({
-        msg: "Login controller"
+        msg: "Logged in successfully",
+        token: token
     })
 }
 
