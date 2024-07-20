@@ -51,7 +51,7 @@ export const registerHandler = async (req, res, next) => {
     const findUser = await User.findOne({ email: validatedData.email });
     if (findUser) {
         return res.status(400).json({
-            msg: "User already exists"
+            err: "User already exists"
         })
     }
 
@@ -80,6 +80,6 @@ export const getAllUsers = async (req, res, next) => {
 
         return res.status(200).json(searchedUsers);
     }
-    const users = await User.find();
+    const users = await User.find().select("-password");
     return res.status(200).json(users)
 }
