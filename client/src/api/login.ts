@@ -3,7 +3,11 @@ import { LOGIN_ROUTE, REGISTER_ROUTE } from "./paths"
 
 interface ResponseInterface{
     status: "OK" | "NOT OK";
-    data: object;
+    data: {
+        token?: string;
+        msg?: string;
+        err?: string;
+    };
     error: boolean;
 }
 

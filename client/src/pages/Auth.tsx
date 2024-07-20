@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -15,9 +14,8 @@ import {
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
-import axiosInstance from "../api/axios";
 import axios from "axios";
-
+import { useToast } from "../components/ui/use-toast";
 interface AuthStateInterface {
   username?: string;
   email: string;
@@ -30,6 +28,7 @@ const Auth = () => {
   const [loginForm, setLoginForm] = useState<boolean>(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {toast} = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -58,13 +57,26 @@ const Auth = () => {
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (loginForm) {
+      if(!authDetails?.email || !authDetails?.password){
+        toast({
+          title: "Login failed",
+          description: "Please fill all fields",
+        })
+        return ;
+      }
       const response = await handleLoginApi({ email: authDetails?.email, password: authDetails?.password });
       if (response.status === "OK") {
         dispatch(appActions.setLogin(true));
-        navigate("/");
+        localStorage?.setItem("user", response?.data?.token!);
+        navigate("/chats");
+        return ;
       } else {
         dispatch(appActions.setLogin(false));
-        alert("Login Failed")
+        toast({
+          title: "Login failed",
+          description: "Something went wrong",
+        })
+        return ;
       }
     } else {
       const response = await handleRegisterApi({
@@ -72,13 +84,21 @@ const Auth = () => {
         email: authDetails?.email,
         password: authDetails?.password
       });
-      if (response.status === "OK") {
-        dispatch(appActions.setLogin(true));
-        navigate("/");
-      } else {
-        dispatch(appActions.setLogin(false));
-        alert("Registration Failed")
+
+      if(response.status === "OK"){
+        setLoginForm(true);
+        toast({
+          title: "Registered successfully",
+          description: response?.data?.msg,
+        })
       }
+      // if (response.status === "OK") {
+      //   dispatch(appActions.setLogin(true));
+      //   navigate("/");
+      // } else {
+      //   dispatch(appActions.setLogin(false));
+      //   alert("Registration Failed")
+      // }
     }
   }
 
@@ -86,8 +106,8 @@ const Auth = () => {
     <div className="h-screen mx-auto p-4 w-full overflow-hidden">
       <Tabs defaultValue="login" className="w-[400px] mx-auto">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="login" onClick={() => setLoginForm(true)}>Login</TabsTrigger>
-          <TabsTrigger value="register" onClick={() => setLoginForm(false)}>Register</TabsTrigger>
+          <TabsTrigger value="login" onClick={() => setLoginForm((prev) => !prev)}>Login</TabsTrigger>
+          <TabsTrigger value="register" onClick={() => setLoginForm((prev) => !prev)}>Register</TabsTrigger>
         </TabsList>
         <TabsContent value="login" key={loginForm ? "login" : ""}>
           <Card>
@@ -96,8 +116,8 @@ const Auth = () => {
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="space-y-1 mb-4">
-                <Label htmlFor="username">Username</Label>
-                <Input id="username" name="username" value={authDetails?.username} onChange={handleChange} />
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" name="email" value={authDetails?.email} onChange={handleChange} />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="password">Password</Label>
