@@ -1,6 +1,5 @@
-import axiosInstance from "./axios"
+import {axiosInstance} from "./axios"
 import { LOGIN_ROUTE, REGISTER_ROUTE } from "./paths"
-
 interface ResponseInterface{
     status: "OK" | "NOT OK";
     data: {
