@@ -54,8 +54,7 @@ const Auth = () => {
     }
   }
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (loginForm) {
       if(!authDetails?.email || !authDetails?.password){
         toast({
@@ -117,11 +116,22 @@ const Auth = () => {
             <CardContent className="space-y-2">
               <div className="space-y-1 mb-4">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" value={authDetails?.email} onChange={handleChange} />
+                <Input id="email" name="email" value={authDetails?.email || ""} onChange={handleChange} />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" name="password" value={authDetails?.password} onChange={handleChange}/>
+                <Input 
+                  id="password" 
+                  type="password" 
+                  name="password"
+                  onKeyDown={(e) => {
+                    if(e.key === "Enter"){
+                      handleSubmit()
+                    }
+                    return;
+                  }}
+                  value={authDetails?.password || ""} 
+                  onChange={handleChange}/>
               </div>
             </CardContent>
             <CardFooter>
@@ -137,15 +147,26 @@ const Auth = () => {
             <CardContent className="space-y-2">
               <div className="space-y-1 mb-4">
                 <Label htmlFor="username">Username</Label>
-                <Input id="username" name="username" value={authDetails?.username} onChange={handleChange}/>
+                <Input id="username" name="username" value={authDetails?.username || ""} onChange={handleChange}/>
               </div>
               <div className="space-y-1 mb-4">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" value={authDetails?.email} onChange={handleChange}/>
+                <Input id="email" name="email" value={authDetails?.email || ""} onChange={handleChange}/>
               </div>
               <div className="space-y-1">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" name="password" type="password" value={authDetails?.password} onChange={handleChange}/>
+                <Input 
+                  id="password" 
+                  name="password" 
+                  type="password" 
+                  onKeyDown={(e) => {
+                    if(e.key === "Enter"){
+                      handleSubmit()
+                    }
+                    return;
+                  }}
+                  value={authDetails?.password || ""} 
+                  onChange={handleChange}/>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="profilePic">Upload profile pic</Label>
@@ -162,40 +183,4 @@ const Auth = () => {
   )
 }
 
-// <div className="border-2 bg-slate-100 flex flex-col h-screen items-center justify-center">
-//   <h2 className="text-3xl mx-auto my-4">{loginForm ? "Login" : "Register"}</h2>
-//   <div className="flex flex-col w-1/3 mx-auto">
-//     {!loginForm && 
-//       <input 
-//         type="text" 
-//         name="username" 
-//         id="username" 
-//         placeholder="Username"
-//         value={authDetails?.username || ""}
-//         onChange={(e) => handleChange(e)}
-//         className="border-2 border-black rounded-md p-2 my-3"/>}
-//     <input 
-//       type="text" 
-//       name="email" 
-//       id="email" 
-//       placeholder="Email"
-//       value={authDetails?.email || ""}
-//       onChange={(e) => handleChange(e)}
-//       className="border-2 border-black rounded-md p-2 my-3"/>
-//     <input 
-//       type="password" 
-//       name="password" 
-//       id="password" 
-//       placeholder="Password"
-//       value={authDetails?.password || ""}
-//       onChange={(e) => handleChange(e)}
-//       autoComplete="off"
-//       className="border-2 border-black rounded-md p-2 my-3" />
-//     <button 
-//       className="bg-black text-white inline-block w-fit mx-auto mt-2 px-3 py-1 rounded-md"
-//       onClick={(e) => handleSubmit(e)}>
-//         {loginForm ? "Login" : "Signup"}
-//     </button>
-//   </div>
-// </div>
 export default Auth

@@ -1,22 +1,26 @@
 import { useEffect, useState } from "react"
 import Navbar from "../page_components/Navbar"
-import ChatList from "./ChatList"
 import ChatSection from "./ChatSection"
-import axiosInstance from "../api/axios"
+import { useNavigate } from "react-router-dom"
+import { axiosInstance } from "../api/axios"
 
 const Home = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<any>([]);
-
-  // put a skeleton later
-  if (loading) {
-    return <h1>Loading...</h1>
-  }
+  const navigate = useNavigate();
 
   const fetchUsers = async () => {
-    const response = await axiosInstance.get("/user");
-    console.log("user resp ", response);
-    setUsers(response?.data);
+    setLoading(true);
+    let response;
+    try {
+      response = await axiosInstance.get("/user");
+      setUsers(response?.data);
+    } catch (error: any) {
+      localStorage.removeItem("user")
+      navigate("/");
+      return ;
+    }
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -30,7 +34,7 @@ const Home = () => {
         {/* <ChatList /> */}
         {users?.map((user: any) => {
           return (
-            <div>
+            <div key={user?.username}>
               {user?.username}
             </div>
           )
