@@ -40,7 +40,7 @@ const Home = () => {
         {users?.map((user: any) => {
           const username = user?.username?.charAt(0)?.toUpperCase() + user?.username?.slice(1)
           return (
-            <div key={user?.username} className="flex space-x-2 items-center mb-3 p-2 cursor-pointer hover:bg-black/80 hover:text-white text-gray-500 rounded-md"
+            <div key={user?.username} className={`flex space-x-2 items-center mb-3 p-2 cursor-pointer hover:bg-black/80 hover:text-white rounded-md ${currentChat === username ? "bg-black/80 text-white" : ""}`}
               onClick={() => handleChat(username)}>
               <img src={user?.profilePic} alt="" className="w-10 h-10 rounded-full" />
               <span className="text-xl">{username}</span>
