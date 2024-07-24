@@ -2,7 +2,10 @@ import { useDispatch } from "react-redux"
 import { appActions } from "../store/slices/rootSlice";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+interface NavbarProps {
+  currentChat: string;
+}
+const Navbar = ({currentChat}: NavbarProps) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -14,7 +17,7 @@ const Navbar = () => {
 
   return (
     <div className="bg-slate-100 flex justify-between items-center px-6 my-3 p-3">
-      <div className="text-xl">Vinisha</div>
+      <div className="text-xl">{currentChat}</div>
       <button className="text-gray-600 hover:text-black" onClick={handleLogout}>Logout</button>
     </div>
   )
