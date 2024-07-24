@@ -18,11 +18,11 @@ export const verifyToken = (req, res, next) => {
 
     try {
         jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
-            if(err) {
+            if (err) {
                 return res.status(401).json({
                     err: "Invalid token"
                 })
-            } else{
+            } else {
                 req.user = decodedToken?.userId
                 next();
             }

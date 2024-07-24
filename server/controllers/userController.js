@@ -80,6 +80,10 @@ export const getAllUsers = async (req, res, next) => {
 
         return res.status(200).json(searchedUsers);
     }
-    const users = await User.find().select("-password");
+    const users = await User.find({
+        $nor: [{
+            _id: req.user
+        }]
+    }).select("-password");
     return res.status(200).json(users)
 }
