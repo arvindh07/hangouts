@@ -85,30 +85,29 @@ const Auth = () => {
       });
 
       if(response.status === "OK"){
-        setLoginForm(true);
         toast({
           title: "Registered successfully",
-          description: response?.data?.msg,
+          description: response?.data?.msg
+        })
+        window.location.href = "/";
+      } else{
+        toast({
+          title: "Registration failed",
+          description: "Something went wrong"
         })
       }
-      // if (response.status === "OK") {
-      //   dispatch(appActions.setLogin(true));
-      //   navigate("/");
-      // } else {
-      //   dispatch(appActions.setLogin(false));
-      //   alert("Registration Failed")
-      // }
     }
+    setAuthDetails({} as AuthStateInterface);
   }
-
+  
   return (
     <div className="h-screen mx-auto p-4 w-full overflow-hidden">
       <Tabs defaultValue="login" className="w-[400px] mx-auto">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login" onClick={() => setLoginForm((prev) => !prev)}>Login</TabsTrigger>
-          <TabsTrigger value="register" onClick={() => setLoginForm((prev) => !prev)}>Register</TabsTrigger>
+          <TabsTrigger value={"register"} onClick={() => setLoginForm((prev) => !prev)}>Register</TabsTrigger>
         </TabsList>
-        <TabsContent value="login" key={loginForm ? "login" : ""}>
+        <TabsContent value={"login"}>
           <Card>
             <CardHeader>
               <CardTitle>Welcome back to Hangouts🚀</CardTitle>
@@ -139,8 +138,8 @@ const Auth = () => {
             </CardFooter>
           </Card>
         </TabsContent>
-        <TabsContent value="register" key={!loginForm ? "register" : ""}>
-          <Card>
+        <TabsContent value={"register"}>
+        <Card>
             <CardHeader>
               <CardTitle>Create an account</CardTitle>
             </CardHeader>
