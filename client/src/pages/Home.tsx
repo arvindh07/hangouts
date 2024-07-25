@@ -3,6 +3,7 @@ import Navbar from "../page_components/Navbar"
 import ChatSection from "./ChatSection"
 import { useNavigate } from "react-router-dom"
 import { axiosInstance } from "../api/axios"
+import Chat from "./Chat"
 
 const Home = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -54,10 +55,7 @@ const Home = () => {
           ? <div className="flex justify-center items-center h-screen">
             <p>Click to see chat</p>
           </div>
-          : <>
-            <Navbar currentChat={currentChat} />
-            <ChatSection />
-          </>}
+          : <Chat currentChat={currentChat} />}
       </div>
     </div>
   )
