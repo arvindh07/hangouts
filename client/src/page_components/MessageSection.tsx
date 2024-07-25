@@ -13,7 +13,7 @@ const MessageSection = () => {
     const currentUser = "Me";
 
     return (
-        <div className="h-4/5 overflow-y-auto message">
+        <div className="h-4/5 overflow-y-auto message bg-gray-50 pt-2 mb-3 rounded-sm">
             {messages?.map((msgObj: any, index: number) => {
                 return (
                     <div className={`flex flex-col px-2 w-full`}>
