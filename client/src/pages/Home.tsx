@@ -34,7 +34,7 @@ const Home = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="flex flex-col w-1/4 ">
+      <div className="flex flex-col w-1/4 max-w-[280px]">
         <h1 className="text-2xl mx-auto my-4 border-b-2 mb-10">Hangouts🚀</h1>
         {/* <ChatList /> */}
         {users?.map((user: any) => {
@@ -42,7 +42,7 @@ const Home = () => {
           return (
             <div key={user?.username} className={`flex space-x-2 items-center mb-3 p-2 cursor-pointer hover:bg-black/80 hover:text-white rounded-md ${currentChat === username ? "bg-black/80 text-white" : ""}`}
               onClick={() => handleChat(username)}>
-              <img src={user?.profilePic} alt="" className="w-10 h-10 rounded-full" />
+              <img src={user?.profilePic} alt="" className="w-10 h-10 rounded-full object-contain" />
               <span className="text-xl">{username}</span>
             </div>
           )
