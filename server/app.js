@@ -2,11 +2,15 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import userRouter from "./routes/userRouter.js";
-import path from "path";
+import { Socket } from "socket.io";
 
 // 1. initialization
 const app = express();
 const server = http.createServer(app);
+const io = new Socket({
+    origin: "http://localhost:5173",
+    credentials: true
+})
 
 // 2. middlewares
 app.use(cors({
@@ -15,6 +19,11 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.static("public"));
+
+// 3. websocket
+io.on("connection", (socket) => {
+    console.log("A new socket connected", socket.id);
+})
 
 // 4. routes
 app.use("/api/user", userRouter);
