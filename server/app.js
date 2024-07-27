@@ -18,12 +18,27 @@ app.use(express.static("public"));
 
 // 3. websocket
 const io = new Server(server, {
+    pingTimeout: 60000,
     cors: {
         origin: "http://localhost:5173"
     }
 });
 io.on("connection", (socket) => {
-    console.log("A new socket connected", socket.id);
+    // create room for incoming id + current user
+    socket.on("setup", (currentUserId) => {
+        // joined current user id
+        socket.join(currentUserId);
+        socket.emit("connected");
+    })
+    
+    socket.on("join-room", (frndId) => {
+        socket.join(frndId);
+        console.log("User joined room ", frndId);
+    })
+
+    socket.on("one-message", (msg) => {
+        
+    })
 })
 
 // 4. routes
