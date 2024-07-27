@@ -34,12 +34,13 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<any>([]);
   const navigate = useNavigate();
-  const [currentChat, setCurrentChat] = useState<string | null>(null);
+  const [currentChat, setCurrentChat] = useState<any>(null);
   const user = useSelector((state: RootState) => state.app.user);
   const [userTerm, setUserTerm] = useState("");
   const [searchResults, setSearchResults] = useState<any>([]);
   const [chatList, setChatList] = useState<any>([]);
   const [open, setOpen] = useState(false);
+  const [currentChatId, setCurrentChatId] = useState<any>(null);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -55,8 +56,9 @@ const Home = () => {
     setLoading(false);
   }
 
-  const handleChat = (username: string, friendId: string) => {
-    setCurrentChat(username);
+  const handleChat = (userObj: any, friendId: string, chatId: string) => {
+    setCurrentChat(userObj);
+    setCurrentChatId(chatId);
     socket.emit("join-room", friendId);
   }
 
@@ -91,7 +93,7 @@ const Home = () => {
     }
 
     const otherUser = getOtherUser(localChatList, user);
-    setCurrentChat(otherUser?.username);
+    setCurrentChat(otherUser);
     setOpen(false);
   }
 
@@ -166,7 +168,7 @@ const Home = () => {
           // onClick={() => handleChat(otherUserName, chat._id)}
           return (
             <div key={chat?._id} className={`flex space-x-2 items-center mb-3 p-2 cursor-pointer hover:bg-black/80 hover:text-white rounded-md ${currentChat === otherUser?.username ? "bg-black/80 text-white" : ""}`}
-            onClick={() => handleChat(otherUser?.username, otherUser._id)}>
+            onClick={() => handleChat(otherUser, otherUser._id, chat?._id)}>
               <img src={otherUser?.profilePic} alt="" className="w-10 h-10 rounded-full object-contain" />
               <span className="text-xl">{capitalizeWords(otherUser?.username)}</span>
             </div>
@@ -179,7 +181,7 @@ const Home = () => {
           ? <div className="flex justify-center items-center h-screen">
             <p>Click to see chat</p>
           </div>
-          : <Chat currentChat={currentChat} />}
+          : <Chat currentChat={currentChat} chatId={currentChatId} />}
       </div>
     </div>
   )

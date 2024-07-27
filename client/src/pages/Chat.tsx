@@ -1,14 +1,15 @@
 import Navbar from "../page_components/Navbar"
 import ChatSection from "./ChatSection"
 interface ChatProps {
-    currentChat: string;
+    currentChat: any;
+    chatId: string;
 }
 
-const Chat = ({ currentChat }: ChatProps) => {
+const Chat = ({ currentChat, chatId }: ChatProps) => {
     return (
         <>
-            <Navbar currentChat={currentChat} />
-            <ChatSection />
+            <Navbar currentChat={currentChat?.username} />
+            <ChatSection currentChat={currentChat} chatId={chatId} />
         </>
     )
 }
