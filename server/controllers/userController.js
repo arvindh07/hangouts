@@ -79,7 +79,7 @@ export const getAllUsers = async (req, res, next) => {
                     $regex: `${searchTerm}`, $options: "i"
                 }
             }]
-        });
+        }).select("-password");
 
         return res.status(200).json(searchedUsers);
     }
