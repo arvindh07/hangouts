@@ -20,7 +20,7 @@ const ChatSection = ({ currentChat, chatId }: any ) => {
   return (
     <div className="h-screen">
         <MessageSection messages={messages} />
-        <UserInteraction />
+        <UserInteraction chatId={chatId} setMessages={setMessages} />
     </div>
   )
 }

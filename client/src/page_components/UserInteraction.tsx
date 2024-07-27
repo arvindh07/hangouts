@@ -1,10 +1,20 @@
 import { useState } from "react";
 import { socket } from "../pages/Home";
+import { axiosInstance } from "../api/axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
-const UserInteraction = () => {
+const UserInteraction = ({ chatId, setMessages }: any) => {
   const [message, setMessage] = useState<string>("");
+  const user = useSelector((state: RootState) => state.app.user);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
+    const response = await axiosInstance.post("/message", {
+      content: message,
+      sender: user.id,
+      chatRoom: chatId
+    })
+    setMessages((prev: any) => [...prev, response?.data]);
     socket.emit("one-message", message);
     setMessage("");
   }
