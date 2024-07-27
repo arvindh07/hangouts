@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { socket } from "../pages/Home";
 
 const UserInteraction = () => {
   const [message, setMessage] = useState<string>("");
 
   const handleSendMessage = () => {
+    socket.emit("one-message", message);
     setMessage("");
   }
 
