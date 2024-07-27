@@ -4,8 +4,7 @@ import { handleCreateMessage, handleGetAllMessages } from "../controllers/messag
 
 const router = Router();
 
-router.route("/")
-    .post(verifyToken, handleCreateMessage)
-    .get(verifyToken, handleGetAllMessages)
+router.post("/", verifyToken, handleCreateMessage)
+router.post("/get", verifyToken, handleGetAllMessages)
 
 export default router;
