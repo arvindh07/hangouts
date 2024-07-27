@@ -26,7 +26,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../components/ui/card"
-import { capitalizeWords } from "../utils/common";
+import { capitalizeWords, getOtherUser } from "../utils/common";
 
 export let socket: any;
 
@@ -39,6 +39,7 @@ const Home = () => {
   const [userTerm, setUserTerm] = useState("");
   const [searchResults, setSearchResults] = useState<any>([]);
   const [chatList, setChatList] = useState<any>([]);
+  const [open, setOpen] = useState(false);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -62,11 +63,11 @@ const Home = () => {
   const handleAddRemoveChatList = (userObj: any) => {
     let userFoundIndex = -1;
     chatList.forEach((element: any, index: number) => {
-      if(element?._id === userObj._id){
+      if (element?._id === userObj._id) {
         userFoundIndex = index
       }
     });
-    if(userFoundIndex === -1){
+    if (userFoundIndex === -1) {
       setChatList((prev: any) => ([...prev, userObj]))
     } else {
       const newChatList = chatList?.filter((_: any, index: number) => index !== userFoundIndex);
@@ -74,16 +75,33 @@ const Home = () => {
     }
   }
 
-  console.log("chatlist -> ", chatList);
-
   const handleSearchUser = async () => {
     const response = await axiosInstance.get(`/user?search=${userTerm}`);
-    console.log("resp -> ", response);
     setSearchResults(response.data);
   }
 
+  const handleAddToChats = async (userObj: any) => {
+    const response = await axiosInstance.post("/chat", {
+      userId: userObj?._id
+    });
+    let localChatList = chatList[0]?.users;
+    if(!chatList?.find((chat: any) => chat._id === response.data?._id)) {
+      setChatList((prev: any) => ([response?.data, ...prev]));
+      localChatList = response?.data?.users;
+    }
+
+    const otherUser = getOtherUser(localChatList, user);
+    setCurrentChat(otherUser?.username);
+    setOpen(false);
+  }
+
+  const fetchChats = async () => {
+    const response = await axiosInstance.get("/chat");
+    setChatList(response.data);
+  }
+
   useEffect(() => {
-    fetchUsers();
+    fetchChats();
     socket = io("http://localhost:6999");
     socket.emit("setup", user.id);
     socket.on("connected", () => {
@@ -96,8 +114,8 @@ const Home = () => {
       <div className="flex flex-col w-1/4 max-w-[280px]">
         <h1 className="text-2xl mx-auto my-4 border-b-2 mb-10">Hangouts🚀</h1>
         <div>
-          <Drawer>
-            <DrawerTrigger>Search</DrawerTrigger>
+          <Drawer open={open} onOpenChange={(open) => setOpen(open)}>
+            <DrawerTrigger onClick={() => setOpen(true)}>Search</DrawerTrigger>
             <DrawerContent>
               <div className="mx-auto w-full max-w-sm">
                 <DrawerHeader>
@@ -107,20 +125,21 @@ const Home = () => {
                       name="userTerm"
                       value={userTerm}
                       onChange={(e) => setUserTerm(e.target.value)} />
-                    <Button onClick={handleSearchUser}>Search</Button>
+                    <Button disabled={!userTerm} onClick={handleSearchUser}>Search</Button>
                   </div>
                   <div className="mt-2">
                     {/* display users list */}
                     {searchResults?.map((result: any) => {
                       return (
+                        // single chat
                         <Badge
                           key={result?._id}
                           className={`rounded-md mb-2 px-5 py-1 mr-2 cursor-pointer hover:bg-black/10 transition-all duration-150 
-                          ${chatList?.find((user: any) => user._id === result?._id) 
-                            ? "bg-black text-white hover:bg-black"
-                            : "bg-white text-black hover:bg-white"}`}
+                          ${chatList?.users?.find((user: any) => user._id === result?._id)
+                              ? "bg-black text-white hover:bg-black"
+                              : "bg-white text-black hover:bg-white"}`}
                           variant="outline"
-                          onClick={() => handleAddRemoveChatList(result)}>
+                          onClick={() => handleAddToChats(result)}>
                           <div className="flex flex-col">
                             <span className="text-xl">{capitalizeWords(result?.username)}</span>
                             <span>{result?.email}</span>
@@ -131,24 +150,28 @@ const Home = () => {
                   </div>
                 </DrawerHeader>
                 <DrawerFooter>
-                  <Button>Add</Button>
-                  <Button variant="outline">Cancel</Button>
+                  {/* <Button onClick={handleAddToChats}>Add</Button> */}
+                  <DrawerClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DrawerClose>
                 </DrawerFooter>
               </div>
             </DrawerContent>
           </Drawer>
         </div>
         {/* <ChatList /> */}
-        {/* {users?.map((user: any) => {
-          const username = user?.username?.charAt(0)?.toUpperCase() + user?.username?.slice(1)
+        {chatList?.map((chat: any) => {
+          const otherUser: any = getOtherUser(chat?.users, user);
+          // const username = user?.username?.charAt(0)?.toUpperCase() + user?.username?.slice(1)
+          // onClick={() => handleChat(otherUserName, chat._id)}
           return (
-            <div key={user?.username} className={`flex space-x-2 items-center mb-3 p-2 cursor-pointer hover:bg-black/80 hover:text-white rounded-md ${currentChat === username ? "bg-black/80 text-white" : ""}`}
-              onClick={() => handleChat(username, user._id)}>
-              <img src={user?.profilePic} alt="" className="w-10 h-10 rounded-full object-contain" />
-              <span className="text-xl">{username}</span>
+            <div key={chat?._id} className={`flex space-x-2 items-center mb-3 p-2 cursor-pointer hover:bg-black/80 hover:text-white rounded-md ${currentChat === otherUser?.username ? "bg-black/80 text-white" : ""}`}
+            onClick={() => handleChat(otherUser?.username, otherUser._id)}>
+              <img src={otherUser?.profilePic} alt="" className="w-10 h-10 rounded-full object-contain" />
+              <span className="text-xl">{capitalizeWords(otherUser?.username)}</span>
             </div>
           )
-        })} */}
+        })}
       </div>
       {/* show below only if friend is chosen */}
       <div className="flex flex-col w-3/4 mx-3">
@@ -163,3 +186,17 @@ const Home = () => {
 }
 
 export default Home
+// group chat
+// <Badge
+//   key={result?._id}
+//   className={`rounded-md mb-2 px-5 py-1 mr-2 cursor-pointer hover:bg-black/10 transition-all duration-150 
+//   ${chatList?.find((user: any) => user._id === result?._id) 
+//     ? "bg-black text-white hover:bg-black"
+//     : "bg-white text-black hover:bg-white"}`}
+//   variant="outline"
+//   onClick={() => handleAddRemoveChatList(result)}>
+//   <div className="flex flex-col">
+//     <span className="text-xl">{capitalizeWords(result?.username)}</span>
+//     <span>{result?.email}</span>
+//   </div>
+// </Badge>
