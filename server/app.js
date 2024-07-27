@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import userRouter from "./routes/userRouter.js";
+import chatRouter from "./routes/chatRouter.js";
 import { Server } from "socket.io";
 
 // 1. initialization
@@ -43,6 +44,8 @@ io.on("connection", (socket) => {
 
 // 4. routes
 app.use("/api/user", userRouter);
+app.use("/api/chat", chatRouter);
+
 app.get("/", (_, res) => {
     return res.send("<h1>Welcome to Hangouts backend</h1>");
 })

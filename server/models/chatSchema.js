@@ -8,7 +8,8 @@ const chatSchema = new mongoose.Schema({
     },
     // to emit or broadcast msgs to users in the group or single chat
     users: [{
-        type: mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     }],
     // to give special permissions to remove user from group
     admins: [{
