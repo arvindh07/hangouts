@@ -64,8 +64,10 @@ const Auth = () => {
         return ;
       }
       const response = await handleLoginApi({ email: authDetails?.email, password: authDetails?.password });
+      console.log("login data -> ", response);
       if (response.status === "OK") {
         dispatch(appActions.setLogin(true));
+        dispatch(appActions.setUser(response?.data));
         localStorage?.setItem("user", response?.data?.token!);
         navigate("/chats");
         return ;
