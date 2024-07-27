@@ -78,7 +78,10 @@ export const getAllUsers = async (req, res, next) => {
                 email: {
                     $regex: `${searchTerm}`, $options: "i"
                 }
-            }]
+            }],
+            _id: {
+                $ne: req.user
+            }
         }).select("-password");
 
         return res.status(200).json(searchedUsers);
