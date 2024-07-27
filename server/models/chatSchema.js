@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const chatSchema = new mongoose.Schema({
     // to describe chat name in navbar
     chatName: {
-        type: String
+        type: String,
+        trim: true
     },
     // to emit or broadcast msgs to users in the group or single chat
     users: [{
@@ -14,6 +15,10 @@ const chatSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     }],
+    isGroupChat: {
+        type: Boolean,
+        default: false
+    },
     // to display in the user list on left side with this latest message
     latestMessage: {
         type: mongoose.Schema.Types.ObjectId,
