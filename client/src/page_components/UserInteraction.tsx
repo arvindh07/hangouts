@@ -14,8 +14,8 @@ const UserInteraction = ({ chatId, setMessages }: any) => {
       sender: user.id,
       chatRoom: chatId
     })
-    setMessages((prev: any) => [...prev, response?.data]);
-    socket.emit("one-message", message);
+    socket.emit("one-message", response.data);
+    setMessages((prev: any) => [...prev, response.data]);
     setMessage("");
   }
 
