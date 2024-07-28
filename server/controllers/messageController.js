@@ -6,6 +6,8 @@ export const handleCreateMessage = async (req, res, next) => {
 
     let message = await Message.create(data);
     message = await message.populate("sender", "username email profilePic")
+    message = await message.populate("chatRoom")
+    message = await message.populate("chatRoom.users", "username email profilePic")
     return res.status(201).json(message);
 }
 
