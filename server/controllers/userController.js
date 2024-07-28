@@ -1,7 +1,7 @@
 import { matchedData, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import { User } from "../models/userSchema.js";
-import { createToken } from "../middlewares/token.js";
+import { createRefreshToken, createAccessToken } from "../middlewares/token.js";
 
 export const loginHandler = async (req, res, next) => {
     const { email, password } = req.body;
@@ -27,14 +27,22 @@ export const loginHandler = async (req, res, next) => {
         })
     }
     // create token
-    const token = createToken(user.id);
+    const accessToken = createAccessToken(user.id);
+    const refreshToken = createRefreshToken(user.id);
     // return token
+    res.cookie("jwt", refreshToken, {
+        "httpOnly": true,
+        "secure": process.env.ENV === "production" ? true : false,
+        "same-site": "None",
+        "maxAge": 3 * 1000
+    })
+
     return res.status(200).json({
         id: user?._id,
         username: user?.username,
         email: user?.email,
         profilePic: user?.profilePic,
-        token: token
+        token: accessToken
     })
 }
 
@@ -92,4 +100,8 @@ export const getAllUsers = async (req, res, next) => {
         }]
     }).select("-password");
     return res.status(200).json(users)
+}
+
+export const handleUser = () => {
+
 }
