@@ -31,10 +31,10 @@ export const loginHandler = async (req, res, next) => {
     const refreshToken = createRefreshToken(user.id);
     // return token
     res.cookie("jwt", refreshToken, {
-        "httpOnly": true,
-        "secure": process.env.ENV === "production" ? true : false,
-        "same-site": "None",
-        "maxAge": 3 * 1000
+        httpOnly: true,
+        secure: process.env.ENV === "production" ? true : false,
+        sameSite: "None",
+        maxAge: 2* 60 * 1000
     })
 
     return res.status(200).json({
