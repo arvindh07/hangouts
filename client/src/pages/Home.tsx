@@ -28,7 +28,7 @@ import {
 } from "../components/ui/card"
 import { capitalizeWords, getOtherUser } from "../utils/common";
 
-export let socket: any;
+export let socket: any = io("http://localhost:6999");
 
 const Home = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -105,10 +105,13 @@ const Home = () => {
 
   useEffect(() => {
     fetchChats();
-    socket = io("http://localhost:6999");
     socket.emit("setup", user.id);
     socket.on("connected", () => {
       console.log("Socket connected(Client side)🚀");
+    })
+
+    return (() => {
+      socket.off("message")
     })
   }, [])
 
