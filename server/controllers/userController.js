@@ -103,5 +103,12 @@ export const getAllUsers = async (req, res, next) => {
 }
 
 export const handleUser = () => {
+    
+}
 
+export const handleLogout = (req, res, next) => {
+    res.clearCookie();
+    return res.status(200).json({
+        msg: "Logged out successfully"
+    })
 }
