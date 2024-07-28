@@ -5,7 +5,7 @@ import { axiosInstance } from "../api/axios"
 
 const ChatSection = ({ currentChat, chatId }: any ) => {
   const [messages, setMessages] = useState([]);
-
+  
   const fetchMessages = async () => {    
     const response: any = await axiosInstance.post("/message/get", {
       chatRoom: chatId
@@ -15,7 +15,7 @@ const ChatSection = ({ currentChat, chatId }: any ) => {
 
   useEffect(() => {
     fetchMessages();
-  }, [])
+  }, [chatId])
 
   return (
     <div className="h-screen">

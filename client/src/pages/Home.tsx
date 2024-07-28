@@ -60,7 +60,7 @@ const Home = () => {
     setCurrentChat(userObj);
     setCurrentChatId(chatId);
     socket.emit("join-room", friendId);
-  }
+  }  
 
   const handleAddRemoveChatList = (userObj: any) => {
     let userFoundIndex = -1;
