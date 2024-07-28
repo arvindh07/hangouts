@@ -39,7 +39,15 @@ io.on("connection", (socket) => {
     })
 
     socket.on("one-message", (msg) => {
-        
+        // loop through the room and send the msg
+        const chat = msg;
+        if(!chat?.chatRoom?.users) return;
+
+        chat?.chatRoom?.users?.forEach(user => {
+            if(user._id !== chat?.sender._id){
+                socket.in(user._id).emit("resend-message", msg)
+            }
+        });
     })
 })
 
