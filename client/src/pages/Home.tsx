@@ -93,6 +93,7 @@ const Home = () => {
     }
 
     const otherUser = getOtherUser(localChatList, user);
+    
     setCurrentChat(otherUser);
     setOpen(false);
   }
@@ -164,8 +165,6 @@ const Home = () => {
         {/* <ChatList /> */}
         {chatList?.map((chat: any) => {
           const otherUser: any = getOtherUser(chat?.users, user);
-          // const username = user?.username?.charAt(0)?.toUpperCase() + user?.username?.slice(1)
-          // onClick={() => handleChat(otherUserName, chat._id)}
           return (
             <div key={chat?._id} className={`flex space-x-2 items-center mb-3 p-2 cursor-pointer hover:bg-black/80 hover:text-white rounded-md ${currentChat === otherUser?.username ? "bg-black/80 text-white" : ""}`}
             onClick={() => handleChat(otherUser, otherUser._id, chat?._id)}>
