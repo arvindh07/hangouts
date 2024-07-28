@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
+import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouter.js";
 import chatRouter from "./routes/chatRouter.js";
 import messageRouter from "./routes/messageRouter.js";
@@ -11,6 +12,7 @@ const app = express();
 const server = http.createServer(app);
 
 // 2. middlewares
+app.use(cookieParser());
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
