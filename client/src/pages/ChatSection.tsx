@@ -1,33 +1,34 @@
 import { useEffect, useState } from "react"
 import MessageSection from "../page_components/MessageSection"
 import UserInteraction from "../page_components/UserInteraction"
-import { axiosInstance } from "../api/axios"
 import { socket } from "./Home"
+import useApi from "../hooks/useApi"
 
-const ChatSection = ({ currentChat, chatId }: any ) => {
+const ChatSection = ({ _, chatId }: any) => {
   const [messages, setMessages] = useState<any>([]);
+  const { callApi } = useApi();
 
-    const fetchMessages = async () => {
-        const response: any = await axiosInstance.post("/message/get", {
-            chatRoom: chatId
-        });
-        setMessages(response.data);
-    }
+  const fetchMessages = async () => {
+    const response: any = await callApi("GET_MESSAGES", {
+      chatRoom: chatId
+    });
+    setMessages(response.data);
+  }
 
-    useEffect(() => {
-        fetchMessages();
-    }, [chatId])
+  useEffect(() => {
+    fetchMessages();
+  }, [chatId])
 
-    useEffect(() => {
-        socket.on("resend-message", (msgObj: any) => {
-            setMessages((prev: any) => [...prev, msgObj])
-        })
-    }, [])
-  
+  useEffect(() => {
+    socket.on("resend-message", (msgObj: any) => {
+      setMessages((prev: any) => [...prev, msgObj])
+    })
+  }, [])
+
   return (
     <div className="h-screen">
-        <MessageSection messages={messages} />
-        <UserInteraction chatId={chatId} setMessages={setMessages} />
+      <MessageSection messages={messages} />
+      <UserInteraction chatId={chatId} setMessages={setMessages} />
     </div>
   )
 }

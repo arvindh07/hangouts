@@ -9,7 +9,6 @@ const useApi = () => {
     const [token, setToken] = useState(null);
     const navigate = useNavigate();
 
-    console.log("token outside", token, localAccessToken);
     const refreshToken = async () => {
         const response: AxiosResponse = await axiosInstance.get(REFRESH_ROUTE);
         if (response.status === 200) {
@@ -23,10 +22,8 @@ const useApi = () => {
     const callApi = async (api: any, payload: any = null, params: any = null) => {
         // check for token else call refresh
         // if refresh failed, navigate to "/home"
-        console.log("in api -> ", api, token, localAccessToken, (!token || !localAccessToken));
         // && !localAccessToken
         if ((!token) && (api !== "LOGIN" && api !== "REGISTER")) {
-            console.log("in api #2 -> ", api);
             // on page refresh - wht need to be done?????
             // calling refresh token - we cant keep on asking refresh token if AT is valid/time not expired
             localAccessToken = await refreshToken();

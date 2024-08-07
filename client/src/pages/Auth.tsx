@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { handleLoginApi, handleRegisterApi } from "../api/login";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { appActions } from "../store/slices/rootSlice";
@@ -16,6 +15,7 @@ import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import axios from "axios";
 import { useToast } from "../components/ui/use-toast";
+import useApi from "../hooks/useApi";
 interface AuthStateInterface {
   username?: string;
   email: string;
@@ -28,7 +28,8 @@ const Auth = () => {
   const [loginForm, setLoginForm] = useState<boolean>(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {toast} = useToast();
+  const { toast } = useToast();
+  const { callApi } = useApi();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,11 +42,11 @@ const Auth = () => {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const pic = e.target.files?.[0];
-    if(pic?.type === "image/png" || pic?.type === "image/jpeg"){
+    if (pic?.type === "image/png" || pic?.type === "image/jpeg") {
       const fileData = new FormData();
       fileData.append("file", pic);
       fileData.append("upload_preset", "hangouts");
-      const response = 
+      const response =
         await axios.post(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`, fileData);
       setAuthDetails((prev) => ({
         ...prev,
@@ -56,43 +57,41 @@ const Auth = () => {
 
   const handleSubmit = async () => {
     if (loginForm) {
-      if(!authDetails?.email || !authDetails?.password){
+      if (!authDetails?.email || !authDetails?.password) {
         toast({
           title: "Login failed",
           description: "Please fill all fields",
         })
-        return ;
+        return;
       }
-      const response = await handleLoginApi({ email: authDetails?.email, password: authDetails?.password });
-      console.log("login data -> ", response);
+      const response: any = await callApi("LOGIN", { email: authDetails?.email, password: authDetails?.password });
       if (response.status === "OK") {
         dispatch(appActions.setLogin(true));
         dispatch(appActions.setUser(response?.data));
-        localStorage?.setItem("user", response?.data?.token!);
         navigate("/chats");
-        return ;
+        return;
       } else {
         dispatch(appActions.setLogin(false));
         toast({
           title: "Login failed",
           description: "Something went wrong",
         })
-        return ;
+        return;
       }
     } else {
-      const response = await handleRegisterApi({
+      const response: any = await callApi("REGISTER", {
         username: authDetails?.username,
         email: authDetails?.email,
         password: authDetails?.password
       });
 
-      if(response.status === "OK"){
+      if (response.status === "OK") {
         toast({
           title: "Registered successfully",
           description: response?.data?.msg
         })
         window.location.href = "/";
-      } else{
+      } else {
         toast({
           title: "Registration failed",
           description: "Something went wrong"
@@ -101,7 +100,7 @@ const Auth = () => {
     }
     setAuthDetails({} as AuthStateInterface);
   }
-  
+
   return (
     <div className="h-screen mx-auto p-4 w-full overflow-hidden">
       <Tabs defaultValue="login" className="w-[400px] mx-auto">
@@ -121,18 +120,18 @@ const Auth = () => {
               </div>
               <div className="space-y-1">
                 <Label htmlFor="password">Password</Label>
-                <Input 
-                  id="password" 
-                  type="password" 
+                <Input
+                  id="password"
+                  type="password"
                   name="password"
                   onKeyDown={(e) => {
-                    if(e.key === "Enter"){
+                    if (e.key === "Enter") {
                       handleSubmit()
                     }
                     return;
                   }}
-                  value={authDetails?.password || ""} 
-                  onChange={handleChange}/>
+                  value={authDetails?.password || ""}
+                  onChange={handleChange} />
               </div>
             </CardContent>
             <CardFooter>
@@ -141,33 +140,33 @@ const Auth = () => {
           </Card>
         </TabsContent>
         <TabsContent value={"register"}>
-        <Card>
+          <Card>
             <CardHeader>
               <CardTitle>Create an account</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="space-y-1 mb-4">
                 <Label htmlFor="username">Username</Label>
-                <Input id="username" name="username" value={authDetails?.username || ""} onChange={handleChange}/>
+                <Input id="username" name="username" value={authDetails?.username || ""} onChange={handleChange} />
               </div>
               <div className="space-y-1 mb-4">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" value={authDetails?.email || ""} onChange={handleChange}/>
+                <Input id="email" name="email" value={authDetails?.email || ""} onChange={handleChange} />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="password">Password</Label>
-                <Input 
-                  id="password" 
-                  name="password" 
-                  type="password" 
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
                   onKeyDown={(e) => {
-                    if(e.key === "Enter"){
+                    if (e.key === "Enter") {
                       handleSubmit()
                     }
                     return;
                   }}
-                  value={authDetails?.password || ""} 
-                  onChange={handleChange}/>
+                  value={authDetails?.password || ""}
+                  onChange={handleChange} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="profilePic">Upload profile pic</Label>

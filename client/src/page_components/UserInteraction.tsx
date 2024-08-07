@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { socket } from "../pages/Home";
-import { axiosInstance } from "../api/axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import useApi from "../hooks/useApi";
 
 const UserInteraction = ({ chatId, setMessages }: any) => {
   const [message, setMessage] = useState<string>("");
   const user = useSelector((state: RootState) => state.app.user);
+  const {callApi} = useApi();
 
   const handleSendMessage = async () => {
-    const response = await axiosInstance.post("/message", {
+    const response: any = await callApi("CREATE_MESSAGE", {
       content: message,
       sender: user.id,
       chatRoom: chatId

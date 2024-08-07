@@ -27,6 +27,7 @@ import {
   CardTitle,
 } from "../components/ui/card"
 import { capitalizeWords, getOtherUser } from "../utils/common";
+import useApi from "../hooks/useApi";
 
 export let socket: any = io("http://localhost:6999");
 
@@ -41,26 +42,13 @@ const Home = () => {
   const [chatList, setChatList] = useState<any>([]);
   const [open, setOpen] = useState(false);
   const [currentChatId, setCurrentChatId] = useState<any>(null);
-
-  const fetchUsers = async () => {
-    setLoading(true);
-    let response;
-    try {
-      response = await axiosInstance.get("/user");
-      setUsers(response?.data);
-    } catch (error: any) {
-      localStorage.removeItem("user")
-      navigate("/");
-      return;
-    }
-    setLoading(false);
-  }
+  const { callApi } = useApi();
 
   const handleChat = (userObj: any, friendId: string, chatId: string) => {
     setCurrentChat(userObj);
     setCurrentChatId(chatId);
     socket.emit("join-room", friendId);
-  }  
+  }
 
   const handleAddRemoveChatList = (userObj: any) => {
     let userFoundIndex = -1;
@@ -78,28 +66,28 @@ const Home = () => {
   }
 
   const handleSearchUser = async () => {
-    const response = await axiosInstance.get(`/user?search=${userTerm}`);
+    const response: any = await callApi("SEARCH_USER", null, { userTerm });
     setSearchResults(response.data);
   }
 
   const handleAddToChats = async (userObj: any) => {
-    const response = await axiosInstance.post("/chat", {
+    const response: any = await callApi("CREATE_CHAT", {
       userId: userObj?._id
     });
+
     let localChatList = chatList[0]?.users;
-    if(!chatList?.find((chat: any) => chat._id === response.data?._id)) {
+    if (!chatList?.find((chat: any) => chat._id === response.data?._id)) {
       setChatList((prev: any) => ([response?.data, ...prev]));
       localChatList = response?.data?.users;
     }
 
     const otherUser = getOtherUser(localChatList, user);
-    
     setCurrentChat(otherUser);
     setOpen(false);
   }
 
   const fetchChats = async () => {
-    const response = await axiosInstance.get("/chat");
+    const response: any = await callApi("GET_CHATS");
     setChatList(response.data);
   }
 
@@ -170,7 +158,7 @@ const Home = () => {
           const otherUser: any = getOtherUser(chat?.users, user);
           return (
             <div key={chat?._id} className={`flex space-x-2 items-center mb-3 p-2 cursor-pointer hover:bg-black/80 hover:text-white rounded-md ${currentChat === otherUser?.username ? "bg-black/80 text-white" : ""}`}
-            onClick={() => handleChat(otherUser, otherUser._id, chat?._id)}>
+              onClick={() => handleChat(otherUser, otherUser._id, chat?._id)}>
               <img src={otherUser?.profilePic} alt="" className="w-10 h-10 rounded-full object-contain" />
               <span className="text-xl">{capitalizeWords(otherUser?.username)}</span>
             </div>
@@ -193,8 +181,8 @@ export default Home
 // group chat
 // <Badge
 //   key={result?._id}
-//   className={`rounded-md mb-2 px-5 py-1 mr-2 cursor-pointer hover:bg-black/10 transition-all duration-150 
-//   ${chatList?.find((user: any) => user._id === result?._id) 
+//   className={`rounded-md mb-2 px-5 py-1 mr-2 cursor-pointer hover:bg-black/10 transition-all duration-150
+//   ${chatList?.find((user: any) => user._id === result?._id)
 //     ? "bg-black text-white hover:bg-black"
 //     : "bg-white text-black hover:bg-white"}`}
 //   variant="outline"
