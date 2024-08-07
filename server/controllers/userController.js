@@ -30,11 +30,12 @@ export const loginHandler = async (req, res, next) => {
     const accessToken = createAccessToken(user.id);
     const refreshToken = createRefreshToken(user.id);
     // return token
-    res.cookie("jwt", refreshToken, {
+    res.cookie("jwtRefresh", refreshToken, {
         httpOnly: true,
-        secure: process.env.ENV === "production" ? true : false,
-        sameSite: "None",
-        maxAge: 2* 60 * 1000
+        path: "/api/user/refresh",
+        secure: process.env.ENV === "production",
+        sameSite: "Strict",
+        maxAge: 2 * 60 * 1000
     })
 
     return res.status(200).json({
@@ -103,7 +104,7 @@ export const getAllUsers = async (req, res, next) => {
 }
 
 export const handleUser = () => {
-    
+
 }
 
 export const handleLogout = (req, res, next) => {

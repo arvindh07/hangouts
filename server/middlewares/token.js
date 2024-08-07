@@ -3,7 +3,7 @@ import { User } from "../models/userSchema.js";
 
 export const createAccessToken = (userId) => {
     const token = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: "1m"
+        expiresIn: "30s"
     })
     return token;
 }
@@ -46,7 +46,7 @@ export const verifyRefreshToken = (req, res, next) => {
     // get token from cookie
     // if no token, return
     // else, verifyRefreshToken and create access token and return
-    const refreshToken = req.cookies?.jwt;
+    const refreshToken = req.cookies?.jwtRefresh;
     if (!refreshToken) {
         return res.status(401).json({
             msg: "Unauthorized"
@@ -54,7 +54,7 @@ export const verifyRefreshToken = (req, res, next) => {
     }
 
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, decoded) => {
-        if(err) {
+        if (err) {
             return res.status(403).json({
                 msg: "Forbidden"
             })
@@ -67,8 +67,12 @@ export const verifyRefreshToken = (req, res, next) => {
             })
         }
 
-        const newAccessToken = jwt.sign({ userId: findUser?._id }, process.env.JWT_ACCESS_SECRET);
+        const newAccessToken = createAccessToken(findUser?._id);
         return res.status(200).json({
+            "id": findUser?._id,
+            "username": findUser?.username,
+            "email": findUser?.email,
+            "profilePic": findUser?.profilePic,
             "token": newAccessToken
         })
     })

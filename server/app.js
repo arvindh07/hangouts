@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
         socket.join(currentUserId);
         socket.emit("connected");
     })
-    
+
     socket.on("join-room", (frndId) => {
         socket.join(frndId);
         console.log("User joined room ", frndId);
@@ -43,10 +43,10 @@ io.on("connection", (socket) => {
     socket.on("one-message", (msg) => {
         // loop through the room and send the msg
         const chat = msg;
-        if(!chat?.chatRoom?.users) return;
+        if (!chat?.chatRoom?.users) return;
 
         chat?.chatRoom?.users?.forEach(user => {
-            if(user._id !== chat?.sender._id){
+            if (user._id !== chat?.sender._id) {
                 socket.in(user._id).emit("resend-message", msg)
             }
         });
