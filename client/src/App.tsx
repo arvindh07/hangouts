@@ -1,30 +1,21 @@
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
-import Home from "./pages/Home";
-import Auth from "./pages/Auth";
-import { useSelector } from "react-redux";
-import { RootState } from "./store/store";
 import { ThemeProvider } from "./pages/ThemeProvider";
-import { Toaster } from "./components/ui/toaster";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Auth from "./pages/Auth";
+import Home from "./pages/Home";
 
 function App() {
-  const userLoggedIn = useSelector((state: RootState) => state.app.isLoggedIn)
-    || Boolean(localStorage?.getItem("user"));
-
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Auth />
-    },
-    {
-      path: "/chats",
-      element: userLoggedIn ? <Home /> : <Navigate to="/" replace={true} />
-    }
-  ])
-
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <RouterProvider router={router} />
-      <Toaster />
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={<Auth />} />
+          <Route
+            path="/chats"
+            element={<Home />} />
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   )
 }
