@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { axiosInstance } from "../api/axios"
 import Chat from "./Chat"
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -15,25 +13,18 @@ import {
 import { Badge } from "../components/ui/badge"
 import { Input } from "../components/ui/input"
 import { Button } from "../components/ui/button";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../store/store"
-import { io } from "socket.io-client"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card"
+import { io } from "socket.io-client";
+import { FaSearch } from "react-icons/fa";
 import { capitalizeWords, getOtherUser } from "../utils/common";
 import useApi from "../hooks/useApi";
+import "../index.css";
+import { appActions } from "../store/slices/rootSlice";
 
 export let socket: any = io("http://localhost:6999");
 
 const Home = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [users, setUsers] = useState<any>([]);
   const navigate = useNavigate();
   const [currentChat, setCurrentChat] = useState<any>(null);
   const user = useSelector((state: RootState) => state.app.user);
@@ -43,26 +34,12 @@ const Home = () => {
   const [open, setOpen] = useState(false);
   const [currentChatId, setCurrentChatId] = useState<any>(null);
   const { callApi } = useApi();
+  const dispatch = useDispatch();
 
   const handleChat = (userObj: any, friendId: string, chatId: string) => {
     setCurrentChat(userObj);
     setCurrentChatId(chatId);
     socket.emit("join-room", friendId);
-  }
-
-  const handleAddRemoveChatList = (userObj: any) => {
-    let userFoundIndex = -1;
-    chatList.forEach((element: any, index: number) => {
-      if (element?._id === userObj._id) {
-        userFoundIndex = index
-      }
-    });
-    if (userFoundIndex === -1) {
-      setChatList((prev: any) => ([...prev, userObj]))
-    } else {
-      const newChatList = chatList?.filter((_: any, index: number) => index !== userFoundIndex);
-      setChatList(newChatList);
-    }
   }
 
   const handleSearchUser = async () => {
@@ -91,6 +68,12 @@ const Home = () => {
     setChatList(response.data);
   }
 
+  const handleLogout = async () => {
+    await callApi("LOGOUT");
+    dispatch(appActions?.setLogin(false));
+    navigate("/");
+  }
+
   useEffect(() => {
     fetchChats();
     socket.emit("setup", user.id);
@@ -105,11 +88,28 @@ const Home = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="flex flex-col w-1/4 max-w-[280px]">
-        <h1 className="text-2xl mx-auto my-4 border-b-2 mb-10">Hangouts🚀</h1>
-        <div>
+      <div className="flex flex-col w-1/4 max-w-[280px] bg-indigo-500">
+      <div className="flex items-center justify-around">
+        <h1
+          className="text-2xl my-4 mb-6 
+          drop-shadow-md
+          font-semibold tracking-widest text-white">Hangouts</h1>
+        <button 
+          className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-800/90 font-sans"
+          onClick={handleLogout}>Logout</button>
+      </div>
+        <div className="mx-auto mb-3">
           <Drawer open={open} onOpenChange={(open) => setOpen(open)}>
-            <DrawerTrigger onClick={() => setOpen(true)}>Search</DrawerTrigger>
+            <DrawerTrigger onClick={() => setOpen(true)}>
+              <Button className="hover:bg-black/60">
+                <div className="flex justify-between items-center">
+                  <div className="mr-4">Search</div>
+                  <div>
+                    <FaSearch />
+                  </div>
+                </div>
+              </Button>
+            </DrawerTrigger>
             <DrawerContent>
               <div className="mx-auto w-full max-w-sm">
                 <DrawerHeader>
@@ -157,10 +157,11 @@ const Home = () => {
         {chatList?.map((chat: any) => {
           const otherUser: any = getOtherUser(chat?.users, user);
           return (
-            <div key={chat?._id} className={`flex space-x-2 items-center mb-3 p-2 cursor-pointer hover:bg-black/80 hover:text-white rounded-md ${currentChat === otherUser?.username ? "bg-black/80 text-white" : ""}`}
+            <div key={chat?._id} className={`flex space-x-2 items-center mb-0 p-2 cursor-pointer hover:bg-black/70 hover:text-white
+            ${currentChatId === chat?._id ? "bg-black/80 text-white" : ""}`}
               onClick={() => handleChat(otherUser, otherUser._id, chat?._id)}>
-              <img src={otherUser?.profilePic} alt="" className="w-10 h-10 rounded-full object-contain" />
-              <span className="text-xl">{capitalizeWords(otherUser?.username)}</span>
+              <img src={otherUser?.profilePic} alt="" className="w-9 h-9 rounded-full object-contain" />
+              <span className="text-lg">{capitalizeWords(otherUser?.username)}</span>
             </div>
           )
         })}
@@ -178,17 +179,3 @@ const Home = () => {
 }
 
 export default Home
-// group chat
-// <Badge
-//   key={result?._id}
-//   className={`rounded-md mb-2 px-5 py-1 mr-2 cursor-pointer hover:bg-black/10 transition-all duration-150
-//   ${chatList?.find((user: any) => user._id === result?._id)
-//     ? "bg-black text-white hover:bg-black"
-//     : "bg-white text-black hover:bg-white"}`}
-//   variant="outline"
-//   onClick={() => handleAddRemoveChatList(result)}>
-//   <div className="flex flex-col">
-//     <span className="text-xl">{capitalizeWords(result?.username)}</span>
-//     <span>{result?.email}</span>
-//   </div>
-// </Badge>
