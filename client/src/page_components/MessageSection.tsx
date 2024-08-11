@@ -16,7 +16,7 @@ const MessageSection = ({ messages }: any) => {
     }, [messages])
 
     return (
-        <div ref={msgRef} className="h-4/5 overflow-y-auto message bg-gray-50 pt-2 mb-3 rounded-sm">
+        <div ref={msgRef} className="h-full overflow-y-auto message bg-gray-50 pt-2 mb-3 rounded-sm">
             {messages?.map((msgObj: any) => {
                 return (
                     <div

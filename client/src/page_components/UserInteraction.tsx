@@ -21,7 +21,7 @@ const UserInteraction = ({ chatId, setMessages }: any) => {
   }
 
   return (
-    <div className="max-h-[50px] flex w-8/12 mx-auto justify-between">
+    <div className="max-h-[45px] flex w-8/12 mx-auto justify-between">
       <input
         type="text"
         className="border-2 border-black rounded-md py-2 px-4 w-10/12 mr-8"
