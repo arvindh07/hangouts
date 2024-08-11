@@ -10,7 +10,6 @@ userRouter.post("/register", checkSchema(registerUserSchema), registerHandler);
 userRouter.post("/login", loginHandler);
 userRouter.get("/", verifyToken, getAllUsers);
 userRouter.get("/refresh", verifyRefreshToken);
-userRouter.post("/logout", handleLogout);
-// userRouter.get("/status", refreshToken, handleUser);
+userRouter.get("/logout", handleLogout);
 
 export default userRouter;

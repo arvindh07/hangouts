@@ -115,7 +115,10 @@ export const handleUser = () => {
 }
 
 export const handleLogout = (req, res, next) => {
-    res.clearCookie();
+    res.clearCookie("jwtAccess");
+    res.clearCookie("jwtRefresh", {
+        path: "/api/user/refresh"
+    });
     return res.status(200).json({
         msg: "Logged out successfully"
     })
