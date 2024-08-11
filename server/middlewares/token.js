@@ -16,7 +16,9 @@ export const createRefreshToken = (userId) => {
 }
 
 export const verifyToken = (req, res, next) => {
-    const token = req.headers?.authorization ? req.headers?.authorization?.split(" ")[1] : null;
+    const token = req.cookies?.jwtAccess 
+        ? req.cookies?.jwtAccess
+        : req.headers?.authorization?.split(" ")[1];
 
     if (!token) {
         return res.status(401).json({
@@ -68,12 +70,19 @@ export const verifyRefreshToken = (req, res, next) => {
         }
 
         const newAccessToken = createAccessToken(findUser?._id);
+        res.cookie("jwtAccess", newAccessToken, {
+            httpOnly: true,
+            path: "/",
+            secure: process.env.ENV === "production",
+            sameSite: "Strict",
+            maxAge: 30 * 1000
+        })
+        
         return res.status(200).json({
             "id": findUser?._id,
             "username": findUser?.username,
             "email": findUser?.email,
-            "profilePic": findUser?.profilePic,
-            "token": newAccessToken
+            "profilePic": findUser?.profilePic
         })
     })
 }

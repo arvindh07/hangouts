@@ -30,6 +30,14 @@ export const loginHandler = async (req, res, next) => {
     const accessToken = createAccessToken(user.id);
     const refreshToken = createRefreshToken(user.id);
     // return token
+    res.cookie("jwtAccess", accessToken, {
+        httpOnly: true,
+        path: "/",
+        secure: process.env.ENV === "production",
+        sameSite: "Strict",
+        maxAge: 30 * 1000
+    })
+
     res.cookie("jwtRefresh", refreshToken, {
         httpOnly: true,
         path: "/api/user/refresh",
@@ -43,7 +51,6 @@ export const loginHandler = async (req, res, next) => {
         username: user?.username,
         email: user?.email,
         profilePic: user?.profilePic,
-        token: accessToken
     })
 }
 
