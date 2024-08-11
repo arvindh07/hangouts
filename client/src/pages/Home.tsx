@@ -161,7 +161,7 @@ const Home = () => {
             ${currentChatId === chat?._id ? "bg-black/80 text-white" : ""}`}
               onClick={() => handleChat(otherUser, otherUser._id, chat?._id)}>
               <img src={otherUser?.profilePic} alt="" className="w-9 h-9 rounded-full object-contain" />
-              <span className="text-lg">{capitalizeWords(otherUser?.username)}</span>
+              <span className="text-md">{capitalizeWords(otherUser?.username)}</span>
             </div>
           )
         })}
