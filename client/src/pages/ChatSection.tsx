@@ -4,7 +4,7 @@ import UserInteraction from "../page_components/UserInteraction"
 import { socket } from "./Home"
 import useApi from "../hooks/useApi"
 
-const ChatSection = ({ _, chatId }: any) => {
+const ChatSection = ({ chatId }: any) => {
   const [messages, setMessages] = useState<any>([]);
   const { callApi } = useApi();
 

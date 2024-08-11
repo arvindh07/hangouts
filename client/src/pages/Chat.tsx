@@ -9,7 +9,7 @@ const Chat = ({ currentChat, chatId }: ChatProps) => {
     return (
         <>
             <Navbar currentChat={currentChat?.username} />
-            <ChatSection currentChat={currentChat} chatId={chatId} />
+            <ChatSection chatId={chatId} />
         </>
     )
 }
