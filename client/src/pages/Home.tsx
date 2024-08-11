@@ -167,10 +167,10 @@ const Home = () => {
         })}
       </div>
       {/* show below only if friend is chosen */}
-      <div className="flex flex-col w-3/4 mx-3">
+      <div className="flex flex-col w-full px-3 bg-gray-200">
         {!currentChat
-          ? <div className="flex justify-center items-center h-screen">
-            <p>Click to see chat</p>
+          ? <div className="flex justify-center items-center w-full h-screen">
+            <p>Click chat to see messages</p>
           </div>
           : <Chat currentChat={currentChat} chatId={currentChatId} />}
       </div>
