@@ -1,40 +1,8 @@
-import { useState } from "react"
 import { axiosInstance } from "../api/axios";
-import { useNavigate } from "react-router-dom";
-import { LOGIN_ROUTE, REFRESH_ROUTE, REGISTER_ROUTE } from "../api/paths";
-import { AxiosResponse } from "axios";
+import { LOGIN_ROUTE, REGISTER_ROUTE } from "../api/paths";
 
-let localAccessToken: any = null;
 const useApi = () => {
-    const [token, setToken] = useState(null);
-    const navigate = useNavigate();
-
-    const refreshToken = async () => {
-        const response: AxiosResponse = await axiosInstance.get(REFRESH_ROUTE);
-        if (response.status === 200) {
-            setToken(response.data.token);
-            return response.data.token;
-        }
-        localAccessToken = response.data.token;
-        return null;
-    }
-
     const callApi = async (api: any, payload: any = null, params: any = null) => {
-        // check for token else call refresh
-        // if refresh failed, navigate to "/home"
-        // && !localAccessToken
-        if ((!token) && (api !== "LOGIN" && api !== "REGISTER")) {
-            // on page refresh - wht need to be done?????
-            // calling refresh token - we cant keep on asking refresh token if AT is valid/time not expired
-            localAccessToken = await refreshToken();
-            if (!localAccessToken) {
-                navigate("/");
-                return;
-            } else {
-                axiosInstance.defaults.headers.common.Authorization = `Bearer ${localAccessToken}`
-            }
-        }
-
         // creating response object
         let res = {
             data: null,
@@ -47,9 +15,6 @@ const useApi = () => {
                 try {
                     let apiResponse = await axiosInstance.post(LOGIN_ROUTE, payload);
                     res.data = apiResponse.data;
-                    setToken(apiResponse.data?.token);
-                    localAccessToken = apiResponse.data?.token;
-                    axiosInstance.defaults.headers.common.Authorization = `Bearer ${localAccessToken}`
                 } catch (error) {
                     res.status = "NOT OK";
                     res.error = true;
@@ -102,8 +67,9 @@ const useApi = () => {
                 }
             }
             case "GET_MESSAGES": {
+                let response: any;
                 try {
-                    const response = await axiosInstance.post("/message/get", payload);
+                    response = await axiosInstance.post("/message/get", payload);
                     res.data = response.data;
                 } catch (error) {
                     res.status = "NOT OK";

@@ -1,22 +1,21 @@
-import { ThemeProvider } from "./pages/ThemeProvider";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Home from "./pages/Home";
+import { setNavigate } from "./utils/global";
 
 function App() {
+  const navigate = useNavigate();
+  setNavigate(navigate);
+  
   return (
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={<Auth />} />
-          <Route
-            path="/chats"
-            element={<Home />} />
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+    <Routes>
+      <Route
+        path="/"
+        element={<Auth />} />
+      <Route
+        path="/chats"
+        element={<Home />} />
+    </Routes>
   )
 }
 
