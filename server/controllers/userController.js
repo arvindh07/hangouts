@@ -112,3 +112,15 @@ export const handleLogout = (req, res, next) => {
         msg: "Logged out successfully"
     })
 }
+
+export const handleGetUserStatus = async (req, res, next) => {
+    const userId = req.user;
+    const user = await User.findById(userId);
+    
+    return res.status(200).json({
+        id: user?._id,
+        username: user?.username,
+        email: user?.email,
+        profilePic: user?.profilePic,
+    })
+}

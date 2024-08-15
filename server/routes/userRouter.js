@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllUsers, handleLogout, handleUser, loginHandler, registerHandler } from "../controllers/userController.js";
+import { getAllUsers, handleGetUserStatus, handleLogout, handleUser, loginHandler, registerHandler } from "../controllers/userController.js";
 import { checkSchema } from "express-validator";
 import registerUserSchema from "../validation/authentication.js";
 import { verifyRefreshToken, verifyToken } from "../middlewares/token.js";
@@ -11,5 +11,6 @@ userRouter.post("/login", loginHandler);
 userRouter.get("/", verifyToken, getAllUsers);
 userRouter.get("/refresh", verifyRefreshToken);
 userRouter.get("/logout", handleLogout);
+userRouter.get("/status", verifyToken, handleGetUserStatus);
 
 export default userRouter;
