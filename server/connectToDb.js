@@ -5,5 +5,6 @@ export const connectToDb = async () => {
         await mongoose.connect(process.env.MONGO_URL);
     } catch (error) {
         console.log("seperate file -> ", error);
+        process.exit(1);
     }
 }
