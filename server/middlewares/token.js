@@ -1,23 +1,24 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/userSchema.js";
+import { ACCESS_TOKEN, ACCESS_TOKEN_IN_STR, accessTokenOptions, REFRESH_TOKEN, REFRESH_TOKEN_IN_STR } from "../constants/token.constant.js";
 
 export const createAccessToken = (userId) => {
     const token = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: "30s"
+        expiresIn: ACCESS_TOKEN_IN_STR
     })
     return token;
 }
 
 export const createRefreshToken = (userId) => {
     const token = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET, {
-        expiresIn: "2m"
+        expiresIn: REFRESH_TOKEN_IN_STR
     })
     return token;
 }
 
 export const verifyToken = (req, res, next) => {
-    const token = req.cookies?.jwtAccess 
-        ? req.cookies?.jwtAccess
+    const token = req.cookies?.[ACCESS_TOKEN]
+        ? req.cookies?.[ACCESS_TOKEN]
         : req.headers?.authorization?.split(" ")[1];
 
     if (!token) {
@@ -48,7 +49,7 @@ export const verifyRefreshToken = (req, res, next) => {
     // get token from cookie
     // if no token, return
     // else, verifyRefreshToken and create access token and return
-    const refreshToken = req.cookies?.jwtRefresh;
+    const refreshToken = req.cookies?.[REFRESH_TOKEN];
     if (!refreshToken) {
         return res.status(401).json({
             msg: "Unauthorized"
@@ -70,14 +71,8 @@ export const verifyRefreshToken = (req, res, next) => {
         }
 
         const newAccessToken = createAccessToken(findUser?._id);
-        res.cookie("jwtAccess", newAccessToken, {
-            httpOnly: true,
-            path: "/",
-            secure: process.env.ENV === "production",
-            sameSite: "Strict",
-            maxAge: 30 * 1000
-        })
-        
+        res.cookie(ACCESS_TOKEN, newAccessToken, accessTokenOptions);
+
         return res.status(200).json({
             "id": findUser?._id,
             "username": findUser?.username,

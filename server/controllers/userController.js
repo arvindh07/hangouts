@@ -2,6 +2,7 @@ import { matchedData, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import { User } from "../models/userSchema.js";
 import { createRefreshToken, createAccessToken } from "../middlewares/token.js";
+import { ACCESS_TOKEN, accessTokenOptions, JWT_REFRESH_PATH, REFRESH_TOKEN, refreshTokenOptions } from "../constants/token.constant.js";
 
 export const loginHandler = async (req, res, next) => {
     const { email, password } = req.body;
@@ -30,21 +31,8 @@ export const loginHandler = async (req, res, next) => {
     const accessToken = createAccessToken(user.id);
     const refreshToken = createRefreshToken(user.id);
     // return token
-    res.cookie("jwtAccess", accessToken, {
-        httpOnly: true,
-        path: "/",
-        secure: process.env.ENV === "production",
-        sameSite: "Strict",
-        maxAge: 30 * 1000
-    })
-
-    res.cookie("jwtRefresh", refreshToken, {
-        httpOnly: true,
-        path: "/api/user/refresh",
-        secure: process.env.ENV === "production",
-        sameSite: "Strict",
-        maxAge: 2 * 60 * 1000
-    })
+    res.cookie(ACCESS_TOKEN, accessToken, accessTokenOptions);
+    res.cookie(REFRESH_TOKEN, refreshToken, refreshTokenOptions);
 
     return res.status(200).json({
         id: user?._id,
@@ -115,10 +103,11 @@ export const handleUser = () => {
 }
 
 export const handleLogout = (req, res, next) => {
-    res.clearCookie("jwtAccess");
-    res.clearCookie("jwtRefresh", {
-        path: "/api/user/refresh"
+    res.clearCookie(ACCESS_TOKEN);
+    res.clearCookie(REFRESH_TOKEN, {
+        path: JWT_REFRESH_PATH
     });
+    
     return res.status(200).json({
         msg: "Logged out successfully"
     })
