@@ -2,6 +2,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Home from "./pages/Home";
 import { setNavigate } from "./utils/global";
+import Protected from "./pages/Protected";
 
 function App() {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ function App() {
         element={<Auth />} />
       <Route
         path="/chats"
-        element={<Home />} />
+        element={<Protected><Home /></Protected>} />
     </Routes>
   )
 }

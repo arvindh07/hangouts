@@ -1,5 +1,5 @@
 import { axiosInstance } from "../api/axios";
-import { LOGIN_ROUTE, LOGOUT_ROUTE, REGISTER_ROUTE } from "../api/paths";
+import { LOGIN_ROUTE, LOGOUT_ROUTE, REGISTER_ROUTE, STATUS_ROUTE } from "../api/paths";
 
 const useApi = () => {
     const callApi = async (api: any, payload: any = null, params: any = null) => {
@@ -11,6 +11,17 @@ const useApi = () => {
         }
 
         switch (api) {
+            case "STATUS": {
+                try {
+                    let apiResponse = await axiosInstance.get(STATUS_ROUTE);
+                    res.data = apiResponse.data;
+                } catch (error) {
+                    res.status = "NOT OK";
+                    res.error = true;
+                } finally {
+                    return res;
+                }
+            }
             case "LOGIN": {
                 try {
                     let apiResponse = await axiosInstance.post(LOGIN_ROUTE, payload);
