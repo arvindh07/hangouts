@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import useApi from "../hooks/useApi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { appActions } from "../store/slices/rootSlice";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../store/store";
 
 const Protected = ({children}: any) => {
     const {callApi} = useApi();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const userLoggedIn = useSelector((state:RootState) => state.app.isLoggedIn);
 
     const fetchStatus = async () => {
         const response = await callApi("STATUS");
@@ -20,7 +22,9 @@ const Protected = ({children}: any) => {
     }
 
     useEffect(() => {
-        fetchStatus();
+        if(!userLoggedIn){
+            fetchStatus();
+        }
     }, [])
 
     return (
