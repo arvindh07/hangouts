@@ -88,7 +88,7 @@ const Home = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="flex flex-col w-1/4 max-w-[280px] bg-indigo-500">
+      <div className="flex flex-col w-1/4 max-w-[280px] bg-slate-900">
       <div className="flex items-center justify-around">
         <h1
           className="text-2xl my-4 mb-6 
@@ -157,11 +157,11 @@ const Home = () => {
         {chatList?.map((chat: any) => {
           const otherUser: any = getOtherUser(chat?.users, user);
           return (
-            <div key={chat?._id} className={`flex space-x-2 items-center mb-0 p-2 cursor-pointer hover:bg-black/70 hover:text-white
-            ${currentChatId === chat?._id ? "bg-black/80 text-white" : ""}`}
+            <div key={chat?._id} className={`flex space-x-2 items-center mb-0 p-2 text-white/70 cursor-pointer hover:bg-white/70 hover:text-black
+            ${currentChatId === chat?._id ? "bg-white/80 text-black" : ""}`}
               onClick={() => handleChat(otherUser, otherUser._id, chat?._id)}>
               <img src={otherUser?.profilePic} alt="" className="w-9 h-9 rounded-full object-contain" />
-              <span className="text-md">{capitalizeWords(otherUser?.username)}</span>
+              <span className={`text-md ${currentChatId === chat?._id ? "text-black font-semibold" : ""}`}>{capitalizeWords(otherUser?.username)}</span>
             </div>
           )
         })}
