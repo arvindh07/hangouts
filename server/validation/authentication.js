@@ -33,7 +33,8 @@ const registerUserSchema = {
             },
             errorMessage: "Password must be atleast 8 characters long"
         }
-    }
+    },
+    profilePic: {}
 }
 
 export default registerUserSchema;
