@@ -102,7 +102,7 @@ const useApi = () => {
             }
             case "CREATE_CHAT": {
                 try {
-                    const response = await axiosInstance.post("/message/get", payload);
+                    const response = await axiosInstance.post("/chat", payload);
                     res.data = response.data;
                 } catch (error) {
                     res.status = "NOT OK";
