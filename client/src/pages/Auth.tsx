@@ -30,6 +30,7 @@ const Auth = () => {
   const dispatch = useDispatch();
   const { toast } = useToast();
   const { callApi } = useApi();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,6 +42,7 @@ const Auth = () => {
   }
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoading(true);
     const pic = e.target.files?.[0];
     if (pic?.type === "image/png" || pic?.type === "image/jpeg") {
       const fileData = new FormData();
@@ -53,6 +55,7 @@ const Auth = () => {
         profilePic: response?.data?.secure_url
       }))
     }
+    setLoading(false);
   }
 
   const handleSubmit = async () => {
@@ -173,9 +176,10 @@ const Auth = () => {
                 <Label htmlFor="profilePic">Upload profile pic</Label>
                 <Input id="profilePic" name="profilePic" type="file" onChange={(e) => handleFileChange(e)} />
               </div>
+              {loading && <p className="text-sm leading-7">Please wait...</p>}
             </CardContent>
             <CardFooter>
-              <Button onClick={handleSubmit}>Sign up</Button>
+              <Button onClick={handleSubmit} disabled={loading}>Sign up</Button>
             </CardFooter>
           </Card>
         </TabsContent>
