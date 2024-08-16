@@ -8,7 +8,7 @@ interface ChatProps {
 const Chat = ({ currentChat, chatId }: ChatProps) => {
     return (
         <div className="h-screen">
-            <Navbar currentChat={currentChat?.username} />
+            <Navbar currentChat={currentChat} />
             <ChatSection chatId={chatId} />
         </div>
     )

@@ -160,7 +160,7 @@ const Home = () => {
             <div key={chat?._id} className={`flex space-x-2 items-center mb-0 p-2 text-white/70 cursor-pointer hover:bg-white/70 hover:text-black
             ${currentChatId === chat?._id ? "bg-white/80 text-black" : ""}`}
               onClick={() => handleChat(otherUser, otherUser._id, chat?._id)}>
-              <img src={otherUser?.profilePic} alt="" className="w-9 h-9 rounded-full object-contain" />
+              <img src={otherUser?.profilePic} alt="" className="w-9 h-9 rounded-full object-cover" />
               <span className={`text-md ${currentChatId === chat?._id ? "text-black font-semibold" : ""}`}>{capitalizeWords(otherUser?.username)}</span>
             </div>
           )

@@ -82,7 +82,8 @@ const Auth = () => {
       const response: any = await callApi("REGISTER", {
         username: authDetails?.username,
         email: authDetails?.email,
-        password: authDetails?.password
+        password: authDetails?.password,
+        profilePic: authDetails?.profilePic
       });
 
       if (response.status === "OK") {
