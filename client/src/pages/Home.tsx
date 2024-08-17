@@ -85,28 +85,28 @@ const Home = () => {
       socket.off("message")
     })
   }, [])
-  
+
   return (
     <div className="flex h-screen">
       <div className="flex flex-col w-1/4 max-w-[280px] bg-slate-900">
-      <div className="flex items-center justify-around">
-        <h1
-          className="text-2xl my-4 mb-6 
+        <div className="flex items-center justify-around">
+          <h1
+            className="text-2xl my-4 mb-6 
           drop-shadow-md
           font-semibold tracking-widest text-white">Hangouts</h1>
-        <button 
-          className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-800/90 font-sans"
-          onClick={handleLogout}>Logout</button>
-      </div>
+          <button
+            className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-800/90 font-sans"
+            onClick={handleLogout}>Logout</button>
+        </div>
         <div className="mx-auto mb-3">
           <Drawer open={open} onOpenChange={(open) => setOpen(open)}>
             <DrawerTrigger onClick={() => setOpen(true)} className="bg-white/70 text-black hover:bg-white/60 px-3 py-2 rounded-md">
-                <div className="flex justify-between items-center">
-                  <div className="mr-4">Search</div>
-                  <div>
-                    <FaSearch />
-                  </div>
+              <div className="flex justify-between items-center">
+                <div className="mr-4">Search</div>
+                <div>
+                  <FaSearch />
                 </div>
+              </div>
             </DrawerTrigger>
             <DrawerContent>
               <div className="mx-auto w-full max-w-sm">
@@ -170,7 +170,7 @@ const Home = () => {
           ? <div className="flex justify-center items-center w-full h-screen">
             <p>Click chat to see messages</p>
           </div>
-          : <Chat currentChat={currentChat} chatId={currentChatId} />}
+          : <Chat currentChat={currentChat} chatId={currentChatId} setChatList={setChatList} />}
       </div>
     </div>
   )

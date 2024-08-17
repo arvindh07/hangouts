@@ -4,7 +4,7 @@ import UserInteraction from "../page_components/UserInteraction"
 import { socket } from "./Home"
 import useApi from "../hooks/useApi"
 
-const ChatSection = ({ chatId }: any) => {
+const ChatSection = ({ chatId, setChatList }: any) => {
   const [messages, setMessages] = useState<any>([]);
   const { callApi } = useApi();
 
@@ -28,7 +28,7 @@ const ChatSection = ({ chatId }: any) => {
   return (
     <div className="h-5/6 flex flex-col">
       <MessageSection messages={messages} chatId={chatId} />
-      <UserInteraction chatId={chatId} setMessages={setMessages} />
+      <UserInteraction chatId={chatId} setMessages={setMessages} setChatList={setChatList} />
     </div>
   )
 }
