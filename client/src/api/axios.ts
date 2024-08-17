@@ -40,8 +40,7 @@ axiosInstance.interceptors.response.use((config) => {
         // call refresh token
         try {
             const response = await refreshInstance.get(REFRESH_ROUTE);
-            if (response.status === 200) {
-                console.log("resp token -> ", response?.data?.token);                
+            if (response.status === 200) {               
                 // retry the original request
                 return axiosInstance(config);
             }
