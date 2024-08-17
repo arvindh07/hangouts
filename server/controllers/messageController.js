@@ -9,7 +9,7 @@ export const handleCreateMessage = async (req, res, next) => {
     message = await message.populate("chatRoom")
     message = await message.populate("chatRoom.users", "username email profilePic")
 
-    await Chat.findByIdAndUpdate({_id: data?.chatRoom}, {
+    await Chat.findByIdAndUpdate({ _id: data?.chatRoom }, {
         latestMessage: message
     })
     return res.status(201).json(message);
