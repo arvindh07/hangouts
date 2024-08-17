@@ -8,6 +8,10 @@ export const handleCreateMessage = async (req, res, next) => {
     message = await message.populate("sender", "username email profilePic")
     message = await message.populate("chatRoom")
     message = await message.populate("chatRoom.users", "username email profilePic")
+
+    await Chat.findByIdAndUpdate({_id: data?.chatRoom}, {
+        latestMessage: message
+    })
     return res.status(201).json(message);
 }
 
@@ -16,7 +20,7 @@ export const handleGetAllMessages = async (req, res, next) => {
     const chat = await Chat.find({
         _id: chatRoom
     })
-    if(!chat){
+    if (!chat) {
         return res.status(400).json({
             msg: "No chat room"
         })
