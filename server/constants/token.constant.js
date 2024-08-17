@@ -1,11 +1,11 @@
 export const ACCESS_TOKEN = "jwtAccess";
 export const REFRESH_TOKEN = "jwtRefresh";
 // 60 seconds
-export const ACCESS_TOKEN_EXPIRY = 60 * 1000;
-export const ACCESS_TOKEN_IN_STR = "60s";
+export const ACCESS_TOKEN_EXPIRY = 5 * 60 * 1000;
+export const ACCESS_TOKEN_IN_STR = "5m";
 // 5 minutes
-export const REFRESH_TOKEN_EXPIRY = 5 * 60 * 1000;
-export const REFRESH_TOKEN_IN_STR = "5m";
+export const REFRESH_TOKEN_EXPIRY = 10 * 60 * 1000;
+export const REFRESH_TOKEN_IN_STR = "10m";
 
 export const JWT_REFRESH_PATH = "/api/user/refresh";
 
