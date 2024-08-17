@@ -16,7 +16,7 @@ const MessageSection = ({ messages, chatId }: any) => {
         }
 
         return () => setDate();
-    }, [chatId])
+    }, [messages, chatId])
 
     const setDate = () => {
         dateGetter(null);
