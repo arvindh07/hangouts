@@ -100,15 +100,13 @@ const Home = () => {
       </div>
         <div className="mx-auto mb-3">
           <Drawer open={open} onOpenChange={(open) => setOpen(open)}>
-            <DrawerTrigger onClick={() => setOpen(true)}>
-              <Button className="bg-white/70 text-black hover:bg-white/60">
+            <DrawerTrigger onClick={() => setOpen(true)} className="bg-white/70 text-black hover:bg-white/60 px-3 py-2 rounded-md">
                 <div className="flex justify-between items-center">
                   <div className="mr-4">Search</div>
                   <div>
                     <FaSearch />
                   </div>
                 </div>
-              </Button>
             </DrawerTrigger>
             <DrawerContent>
               <div className="mx-auto w-full max-w-sm">
