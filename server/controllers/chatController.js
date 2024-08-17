@@ -21,8 +21,6 @@ export const handleAccessOrCreateChat = async (req, res, next) => {
         ]
     }).populate("users", "username email profilePic")
     .populate("latestMessage", "content chatRoom sender");
-
-    console.log("chats -> ", chatFound);
     
     if(chatFound?.length === 0) {
         let chat = await Chat.create({
