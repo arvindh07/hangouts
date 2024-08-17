@@ -4,10 +4,29 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import useApi from "../hooks/useApi";
 
-const UserInteraction = ({ chatId, setMessages }: any) => {
+const UserInteraction = ({ chatId, setMessages, chatList, setChatList }: any) => {
   const [message, setMessage] = useState<string>("");
   const user = useSelector((state: RootState) => state.app.user);
-  const {callApi} = useApi();
+  const { callApi } = useApi();
+
+  const rearrangeChatList = (list: any, lastestChatId: string) => {
+    let newList = [];
+    let latestChat = {};
+
+    for (let index = 0; index < list?.length; index++) {
+      let chat = list[index];
+      if (chat?._id !== chatId && chat?._id === lastestChatId) {
+        chat = { ...chat, notification: true }
+      }
+      if (chat?._id === lastestChatId) {
+        latestChat = { ...chat };
+      } else {
+        newList.push({ ...chat });
+      }
+    }
+
+    return [latestChat, ...newList];
+  }
 
   const handleSendMessage = async () => {
     const response: any = await callApi("CREATE_MESSAGE", {
@@ -18,6 +37,7 @@ const UserInteraction = ({ chatId, setMessages }: any) => {
     socket.emit("one-message", response.data);
     setMessages((prev: any) => [...prev, response.data]);
     setMessage("");
+    setChatList(rearrangeChatList(chatList, chatId));
   }
 
   return (
