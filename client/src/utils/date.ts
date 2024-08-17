@@ -31,7 +31,7 @@ export const getDateAndTime = (createdAt: any) => {
     }
     const date = new Date(createdAt.toString());
     const currentDate = new Date();
-    const previousDay = new Date(new Date().getDate() - 1);
+    const previousDay = new Date(Date.now() - 864e5);
     const res = {
         date: ""
     }
@@ -46,7 +46,7 @@ export const getDateAndTime = (createdAt: any) => {
     } else {
         prev = customFormatDate(date);
     }
-
+    
     if(prev) {
         if(prev !== next){
             returnDate = true;

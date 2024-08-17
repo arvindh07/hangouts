@@ -3,22 +3,27 @@ import { RootState } from "../store/store";
 import { useEffect, useRef } from "react";
 import { getDateAndTime, getTime } from "../utils/date";
 
-const MessageSection = ({ messages }: any) => {
+const MessageSection = ({ messages, chatId }: any) => {
     const user = useSelector((state: RootState) => state?.app?.user);
     const msgRef = useRef<any>(null);
 
     useEffect(() => {
-        dateGetter(null);
         if (msgRef.current) {
             msgRef.current?.lastElementChild?.scrollIntoView({
                 behaviour: "smooth",
                 block: "nearest"
             })
         }
-    }, [messages])
+
+        return () => setDate();
+    }, [chatId])
+
+    const setDate = () => {
+        dateGetter(null);
+    }
 
     const dateGetter = (created: any) => {
-        const res = getDateAndTime(created);        
+        const res = getDateAndTime(created);
         return res ? <h5 className="text-center bg-gray-700 text-white inline-block w-fit mx-auto px-2 rounded-md py-1 text-sm mb-4">{res}</h5> : <></>;
     }
 
@@ -29,12 +34,12 @@ const MessageSection = ({ messages }: any) => {
                     <div
                         key={msgObj?._id}
                         className={`flex flex-col px-2 w-full`}>
-                            {dateGetter(msgObj?.createdAt)}
+                        {dateGetter(msgObj?.createdAt)}
                         <div
                             className={`max-w-[60%] bg-blue-100 mb-2 rounded-md p-2 px-4 flex flex-col
                             ${user?.id === msgObj?.sender?._id ? "ml-auto" : "mr-auto"} text-wrap`}>
                             <span>{msgObj?.content}</span>
-                            <span 
+                            <span
                                 className={`text-[12px] text-black/50 font-semibold tracking-wide
                                     ${user?.id === msgObj?.sender?._id ? "ml-auto" : "mr-auto"}`}>{getTime(msgObj?.createdAt)}</span>
                         </div>

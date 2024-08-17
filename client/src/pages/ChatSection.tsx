@@ -27,7 +27,7 @@ const ChatSection = ({ chatId }: any) => {
 
   return (
     <div className="h-5/6 flex flex-col">
-      <MessageSection messages={messages} />
+      <MessageSection messages={messages} chatId={chatId} />
       <UserInteraction chatId={chatId} setMessages={setMessages} />
     </div>
   )
