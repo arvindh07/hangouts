@@ -22,6 +22,8 @@ export const handleAccessOrCreateChat = async (req, res, next) => {
     }).populate("users", "username email profilePic")
     .populate("latestMessage", "content chatRoom sender");
 
+    console.log("chats -> ", chatFound);
+    
     if(chatFound?.length === 0) {
         let chat = await Chat.create({
             users: [userId, req.user]
@@ -37,6 +39,7 @@ export const handleGetAllChats = async (req, res, next) => {
     // get all chats that logged in user is part of
     const chats = await Chat.find({ users: req.user })
         .populate("users", "username email profilePic")
+        .populate("latestMessage", "content chatRoom sender")
         .sort({'updatedAt': -1});
     return res.status(200).json(chats);
 }
