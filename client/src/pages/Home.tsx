@@ -21,6 +21,7 @@ import { capitalizeWords, getOtherUser } from "../utils/common";
 import useApi from "../hooks/useApi";
 import "../index.css";
 import { appActions } from "../store/slices/rootSlice";
+import { AiFillNotification } from "react-icons/ai";
 
 export let socket: any = io("http://localhost:6999");
 
@@ -154,12 +155,35 @@ const Home = () => {
         {/* <ChatList /> */}
         {chatList?.map((chat: any) => {
           const otherUser: any = getOtherUser(chat?.users, user);
+          console.log("notify unseen:same loggedin user", chat?.unseenMessages, user.id !== chat?.latestMessage?.sender);
+          
           return (
-            <div key={chat?._id} className={`flex space-x-2 items-center mb-0 p-2 text-white/70 cursor-pointer hover:bg-white/70 hover:text-black
+            <div key={chat?._id} className={`flex w-full space-x-2 items-center mb-0 p-2 text-white/70 cursor-pointer hover:bg-white/60 hover:text-black group
             ${currentChatId === chat?._id ? "bg-white/80 text-black" : ""}`}
               onClick={() => handleChat(otherUser, otherUser._id, chat?._id)}>
-              <img src={otherUser?.profilePic} alt="" className="w-9 h-9 rounded-full object-cover" />
-              <span className={`text-md ${currentChatId === chat?._id ? "text-black font-semibold" : ""}`}>{capitalizeWords(otherUser?.username)}</span>
+              <div>
+                {/* left div */}
+                <img src={otherUser?.profilePic} alt="" className="w-9 h-9 rounded-full object-cover" />
+              </div>
+              <div className="flex grow flex-col">
+                {/* right div */}
+                <div className="flex justify-between items-center grow pr-4">
+                  {/* right-top */}
+                  <span className={`text-md ${currentChatId === chat?._id ? "text-black font-semibold" : ""}`}>{capitalizeWords(otherUser?.username)}</span>
+                  {chat?.unseenMessages
+                    && user.id !== chat?.latestMessage?.sender
+                    && <AiFillNotification />}
+                </div>
+                <div>
+                  {/* right bottom */}
+                  {/* latestMessage */}
+                  <p 
+                    className={`text-xs text-white/40 
+                      group-hover:text-black ${currentChatId === chat?._id ? "!text-black" : ""}`}>
+                      {chat?.latestMessage?.content}
+                  </p>
+                </div>
+              </div>
             </div>
           )
         })}
