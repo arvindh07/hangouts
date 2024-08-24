@@ -24,6 +24,10 @@ const chatSchema = new mongoose.Schema({
     latestMessage: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Message"
+    },
+    unseenMessages: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 
