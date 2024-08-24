@@ -1,6 +1,16 @@
 import Message from "../models/messageSchema.js";
 import Chat from "../models/chatSchema.js";
 
+/*
+    1. createMessage
+        res -> {
+            message: [...], chat: {latestMessage, unseenMessages}
+        }
+    2. getAllMessages
+        res -> {
+            messages: [...], chat: {latestMessage, unseenMessages}
+        }
+*/
 export const handleCreateMessage = async (req, res, next) => {
     const data = req.body;
 
@@ -17,7 +27,12 @@ export const handleCreateMessage = async (req, res, next) => {
     })
 
     chat = await chat.populate("latestMessage", "content chatRoom sender updatedAt");
-    chat = await chat.populate("users", "username email profilePic");
+    chat = {
+        latestMessage: chat?.latestMessage,
+        unseenMessages: chat?.unseenMessages
+    }
+
+    // chat = await chat.populate("users", "username email profilePic");
     return res.status(201).json({ message, chat });
 }
 
@@ -34,6 +49,11 @@ export const handleGetAllMessages = async (req, res, next) => {
     chat = chat[0];
     chat.unseenMessages = false;
     await chat.save();
+    chat = await chat.populate("latestMessage", "content chatRoom sender updatedAt");
+    chat = {
+        latestMessage: chat?.latestMessage,
+        unseenMessages: chat?.unseenMessages
+    }
 
     const messagesForLoggedInUser = await Message.find({
         chatRoom
