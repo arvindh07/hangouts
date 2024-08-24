@@ -113,7 +113,18 @@ const useApi = () => {
             }
             case "GET_CHATS": {
                 try {
-                    let apiResponse = await axiosInstance.get("/chat");
+                    let apiResponse = await axiosInstance.get("/chat", payload);
+                    res.data = apiResponse.data;
+                } catch (error) {
+                    res.status = "NOT OK";
+                    res.error = true;
+                } finally {
+                    return res;
+                }
+            }
+            case "SEE_CHAT_MSGS": {
+                try {
+                    let apiResponse = await axiosInstance.post("/chat/seen");
                     res.data = apiResponse.data;
                 } catch (error) {
                     res.status = "NOT OK";
