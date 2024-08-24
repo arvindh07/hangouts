@@ -12,8 +12,7 @@ const UserInteraction = ({ chatId, setMessages, setChatList }: any) => {
   const rearrangeChatList = (list: any, latestHalfChatObject: any, chatIdToBeUpdated: string) => {
     const chatObjectToBeUpdated = list?.find((chat: any) => chat?._id === chatIdToBeUpdated);
     const restOfList = list.filter((chat: any) => chat?._id !== chatIdToBeUpdated);
-    restOfList.unshift({...chatObjectToBeUpdated, ...latestHalfChatObject});
-    console.log("##4.1 inside rearrange final chat list after sending a msg", restOfList);
+    restOfList.unshift({ ...chatObjectToBeUpdated, ...latestHalfChatObject });
     return restOfList;
   }
 
@@ -23,18 +22,15 @@ const UserInteraction = ({ chatId, setMessages, setChatList }: any) => {
       sender: user.id,
       chatRoom: chatId
     })
-    console.log("##1 create msg api resp-> ", response);
-    
+
     const messageObject = {
       latestMsgObj: response.data?.message,
       latestChatObj: response?.data?.chat
     }
-    console.log("##2 send socket event one-msg with msg packet-> ", messageObject);
+
     socket.emit("one-message", messageObject);
     setMessages((prev: any) => [...prev, messageObject.latestMsgObj]);
-    console.log("##3 aftr set msgs -> ");
     setMessage("");
-    console.log("##4 before chat list -> ");
     setChatList((prev: any) => rearrangeChatList(prev, messageObject.latestChatObj, chatId));
   }
 

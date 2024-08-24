@@ -8,8 +8,6 @@ interface ChatProps {
 }
 
 const Chat = ({ currentChat, chatId, setChatList, chatList }: ChatProps) => {
-    console.log("##1 ******chatID ", chatId);
-    
     return (
         <div className="h-screen">
             <Navbar currentChat={currentChat} />
@@ -17,4 +15,5 @@ const Chat = ({ currentChat, chatId, setChatList, chatList }: ChatProps) => {
         </div>
     )
 }
-export default Chat
+
+export default Chat;

@@ -87,8 +87,6 @@ const Home = () => {
     })
   }, [])
 
-  console.log("chat list -> ", chatList);
-  
   return (
     <div className="flex h-screen">
       <div className="flex flex-col w-1/4 max-w-[280px] bg-slate-900">
@@ -157,11 +155,7 @@ const Home = () => {
         {/* <ChatList /> */}
         {chatList?.map((chat: any) => {
           const otherUser: any = getOtherUser(chat?.users, user);
-          console.log("notify chat:unseen:same loggedin user", 
-            otherUser?.username,
-            chat?.unseenMessages, 
-            user.id !== chat?.latestMessage?.sender);
-          
+
           return (
             <div key={chat?._id} className={`flex w-full space-x-2 items-center mb-0 p-2 text-white/70 cursor-pointer hover:bg-white/60 hover:text-black group
             ${currentChatId === chat?._id ? "bg-white/80 text-black" : ""}`}
@@ -182,10 +176,10 @@ const Home = () => {
                 <div>
                   {/* right bottom */}
                   {/* latestMessage */}
-                  <p 
+                  <p
                     className={`text-xs text-white/40 
                       group-hover:text-black ${currentChatId === chat?._id ? "!text-black" : ""}`}>
-                      {chat?.latestMessage?.content}
+                    {chat?.latestMessage?.content}
                   </p>
                 </div>
               </div>
