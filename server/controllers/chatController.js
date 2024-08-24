@@ -41,3 +41,18 @@ export const handleGetAllChats = async (req, res, next) => {
         .sort({ 'updatedAt': -1 });
     return res.status(200).json(chats);
 }
+
+export const handleSeenMessages = async (req, res, next) => {
+
+    const { chatRoom } = req.body;
+    let chat = await Chat.findById(chatRoom)
+    
+    if (!chat) {
+        return res.status(400).json({ msg: "No chat found" })
+    }
+    
+    chat.unseenMessages = false;
+    await chat.save();
+
+    return res.status(200).json({ msg: "Success"});
+}

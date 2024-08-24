@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { handleAccessOrCreateChat, handleGetAllChats } from "../controllers/chatController.js";
+import { handleAccessOrCreateChat, handleGetAllChats, handleSeenMessages } from "../controllers/chatController.js";
 import { verifyToken } from "../middlewares/token.js";
 
 const router = Router();
@@ -9,5 +9,7 @@ const router = Router();
 router.route("/")
     .post(verifyToken, handleAccessOrCreateChat)
     .get(verifyToken, handleGetAllChats);
+
+router.post("/seen", handleSeenMessages);
 
 export default router;
