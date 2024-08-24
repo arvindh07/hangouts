@@ -40,14 +40,15 @@ io.on("connection", (socket) => {
         console.log("User joined room ", frndId);
     })
 
-    socket.on("one-message", (msg) => {
+    socket.on("one-message", (messageObject) => {
         // loop through the room and send the msg
-        const chat = msg;
-        if (!chat?.chatRoom?.users) return;
+        const {latestMsgObj} = messageObject;
+        // const chat = latestMsgObj;
+        if (!latestMsgObj?.chatRoom?.users) return;
 
-        chat?.chatRoom?.users?.forEach(user => {
-            if (user._id !== chat?.sender._id) {
-                socket.in(user._id).emit("resend-message", msg)
+        latestMsgObj?.chatRoom?.users?.forEach(user => {
+            if (user._id !== latestMsgObj?.sender._id) {
+                socket.in(user._id).emit("resend-message", messageObject)
             }
         });
     })
