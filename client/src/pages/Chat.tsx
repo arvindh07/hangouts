@@ -4,13 +4,16 @@ interface ChatProps {
     currentChat: any;
     chatId: string;
     setChatList: any;
+    chatList: any
 }
 
-const Chat = ({ currentChat, chatId, setChatList }: ChatProps) => {
+const Chat = ({ currentChat, chatId, setChatList, chatList }: ChatProps) => {
+    console.log("##1 ******chatID ", chatId);
+    
     return (
         <div className="h-screen">
             <Navbar currentChat={currentChat} />
-            <ChatSection chatId={chatId} setChatList={setChatList} />
+            <ChatSection chatId={chatId} setChatList={setChatList} chatList={chatList} />
         </div>
     )
 }
