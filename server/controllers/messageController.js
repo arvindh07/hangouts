@@ -15,7 +15,7 @@ export const handleCreateMessage = async (req, res, next) => {
     }, {
         new: true
     })
-    
+
     chat = await chat.populate("latestMessage", "content chatRoom sender updatedAt");
     chat = await chat.populate("users", "username email profilePic");
     return res.status(201).json({ message, chat });
@@ -23,7 +23,7 @@ export const handleCreateMessage = async (req, res, next) => {
 
 export const handleGetAllMessages = async (req, res, next) => {
     const { chatRoom } = req.body;
-    const chat = await Chat.find({
+    let chat = await Chat.find({
         _id: chatRoom
     })
     if (!chat) {
@@ -31,9 +31,13 @@ export const handleGetAllMessages = async (req, res, next) => {
             msg: "No chat room"
         })
     }
+    chat = chat[0];
+    chat.unseenMessages = false;
+    await chat.save();
+
     const messagesForLoggedInUser = await Message.find({
         chatRoom
     }).populate("sender", "username email profilePic");
 
-    return res.status(200).json(messagesForLoggedInUser);
+    return res.status(200).json({ messages: messagesForLoggedInUser, chat });
 }

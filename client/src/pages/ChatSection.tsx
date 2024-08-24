@@ -12,7 +12,7 @@ const ChatSection = ({ chatId, setChatList }: any) => {
     const response: any = await callApi("GET_MESSAGES", {
       chatRoom: chatId
     });
-    setMessages(response.data);
+    setMessages(response.data?.messages);
   }
 
   useEffect(() => {
