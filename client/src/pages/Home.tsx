@@ -50,7 +50,7 @@ const Home = () => {
   const [chatListScreen, setChatListScreen] = useState(true);
 
   const isLargeDevice = useMediaQuery(
-    "only screen and (min-width : 501px)"
+    "only screen and (min-width : 550px)"
   );
 
   const handleChat = (userObj: any, friendId: string, chatId: string) => {
@@ -108,7 +108,7 @@ const Home = () => {
     <div className="flex flex-col h-screen overflow-hidden">
       {/* top navabr */}
       {/* navbar */}
-      <div className="flex items-center px-4 min-[501px]:px-10 py-3 justify-between bg-slate-900/95">
+      <div className="flex items-center px-4 min-[550px]:px-10 py-3 justify-between bg-slate-900/95">
         <h1
           className="text-2xl 
           drop-shadow-md
@@ -132,7 +132,7 @@ const Home = () => {
       </div>
       <div className="flex-1 flex overflow-hidden">
         {/* main page */}
-        {(chatListScreen || isLargeDevice) && <div className="flex flex-col w-full min-[501px]:w-1/4 md:max-w-[280px] bg-slate-900 pt-3">
+        {(chatListScreen || isLargeDevice) && <div className="flex flex-col w-full min-[550px]:w-1/4 md:max-w-[280px] bg-slate-900 pt-3">
           <div className="mb-3 md:mx-auto px-3 md:px-0 flex items-center justify-between">
             {/* <div className="text-white md:hidden">
               <IoMdArrowRoundBack onClick={() => setChatListScreen((prev) => !prev)} />
@@ -229,7 +229,7 @@ const Home = () => {
           })}
         </div>}
         {/* show below only if friend is chosen */}
-        {(!chatListScreen || isLargeDevice) && <div className="flex-1 min-[501px]:flex flex-col overflow-y-auto min-[501px]:flex-grow w-full bg-gray-200">
+        {(!chatListScreen || isLargeDevice) && <div className="flex-1 flex flex-col overflow-y-auto min-[550px]:flex-grow w-full bg-gray-200">
           {!currentChat
             ? <div className="flex justify-center items-center w-full h-full">
               <p>Click chat to see messages</p>
