@@ -3,11 +3,14 @@ import { socket } from "../pages/Home";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import useApi from "../hooks/useApi";
+import { Loader2 } from "lucide-react"
+import { Button } from "../components/ui/button";
 
 const UserInteraction = ({ chatId, setMessages, setChatList }: any) => {
   const [message, setMessage] = useState<string>("");
   const user = useSelector((state: RootState) => state.app.user);
   const { callApi } = useApi();
+  const [loading, setLoading] = useState(false);
 
   const rearrangeChatList = (list: any, latestHalfChatObject: any, chatIdToBeUpdated: string) => {
     const chatObjectToBeUpdated = list?.find((chat: any) => chat?._id === chatIdToBeUpdated);
@@ -17,6 +20,8 @@ const UserInteraction = ({ chatId, setMessages, setChatList }: any) => {
   }
 
   const handleSendMessage = async () => {
+    setLoading(true);
+    if (!message) return;
     const response: any = await callApi("CREATE_MESSAGE", {
       content: message,
       sender: user.id,
@@ -27,6 +32,7 @@ const UserInteraction = ({ chatId, setMessages, setChatList }: any) => {
       latestMsgObj: response.data?.message,
       latestChatObj: response?.data?.chat
     }
+    setLoading(false);
 
     socket.emit("one-message", messageObject);
     setMessages((prev: any) => [...prev, messageObject.latestMsgObj]);
@@ -48,11 +54,14 @@ const UserInteraction = ({ chatId, setMessages, setChatList }: any) => {
               handleSendMessage()
             }
           }} />
-        <button
+        <Button
           className="ml-2 md:w-2/12 rounded-md cursor-pointer hover:bg-slate-400 bg-gray-950 px-4 text-white"
-          onClick={handleSendMessage}>
-          Send
-        </button>
+          onClick={handleSendMessage}
+          disabled={loading}>
+          {loading
+            ? <Loader2 className="mx-auto h-4 w-4 animate-spin" />
+            : <span>Send</span>}
+        </Button>
       </div>
     </div>
   )

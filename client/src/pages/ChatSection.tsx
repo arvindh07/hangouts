@@ -3,17 +3,20 @@ import MessageSection from "../page_components/MessageSection"
 import UserInteraction from "../page_components/UserInteraction"
 import { socket } from "./Home"
 import useApi from "../hooks/useApi"
+import ChatSkeleton from "../Skeleton/ChatSkeleton"
 
 const ChatSection = ({ chatId, setChatList, chatList }: any) => {
   const [messages, setMessages] = useState<any>([]);
   const { callApi } = useApi();
+  const [messagesLoader, setMessagesLoader] = useState(false);
 
   const fetchMessages = async () => {
+    setMessagesLoader(true);
     const response: any = await callApi("GET_MESSAGES", {
       chatRoom: chatId
     });
     setMessages(response.data?.messages);
-
+    setMessagesLoader(false);
     // rearrange chat list
     const latestHalfChatObj = response?.data?.chat;
     let findChatIndex = chatList?.findIndex((chat: any) => chat?._id === latestHalfChatObj?.latestMessage?.chatRoom);
@@ -73,10 +76,14 @@ const ChatSection = ({ chatId, setChatList, chatList }: any) => {
   }, [chatId])
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
-      <MessageSection messages={messages} chatId={chatId} />
-      <UserInteraction chatId={chatId} setMessages={setMessages} setChatList={setChatList} />
-    </div>
+    <>
+      {messagesLoader 
+        ? <ChatSkeleton />
+        : <div className="flex-1 flex flex-col overflow-hidden">
+        <MessageSection messages={messages} chatId={chatId} messagesLoader={messagesLoader} />
+        <UserInteraction chatId={chatId} setMessages={setMessages} setChatList={setChatList} />
+      </div>}
+    </>
   )
 }
 
