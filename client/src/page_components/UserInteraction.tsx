@@ -35,7 +35,8 @@ const UserInteraction = ({ chatId, setMessages, setChatList }: any) => {
   }
 
   return (
-    <div className="max-h-[45px] flex w-8/12 mx-auto justify-between">
+    <div className="bg-gray-50 w-full pb-6">
+      <div className="w-8/12 mx-auto flex justify-between">
       <input
         type="text"
         className="border-2 border-black rounded-md py-2 px-4 w-10/12 mr-8"
@@ -51,6 +52,7 @@ const UserInteraction = ({ chatId, setMessages, setChatList }: any) => {
         onClick={handleSendMessage}>
         Send
       </button>
+      </div>
     </div>
   )
 }

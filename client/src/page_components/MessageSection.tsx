@@ -24,11 +24,11 @@ const MessageSection = ({ messages, chatId }: any) => {
 
     const dateGetter = (created: any) => {
         const res = getDateAndTime(created);
-        return res ? <h5 className="text-center bg-gray-700 text-white inline-block w-fit mx-auto px-2 rounded-md py-1 text-sm mb-4">{res}</h5> : <></>;
+        return res ? <h5 className="text-center bg-gray-700 text-white inline-block w-fit mx-auto px-2 rounded-md py-1 text-[11px] mb-4">{res}</h5> : <></>;
     }
 
     return (
-        <div ref={msgRef} className="h-full overflow-y-auto message bg-gray-50 pt-2 mb-3 rounded-sm">
+        <div ref={msgRef} className="overflow-y-auto message bg-gray-50 pt-2 pb-3 rounded-sm">
             {messages?.map((msgObj: any) => {
                 return (
                     <div
@@ -36,11 +36,11 @@ const MessageSection = ({ messages, chatId }: any) => {
                         className={`flex flex-col px-2 w-full`}>
                         {dateGetter(msgObj?.createdAt)}
                         <div
-                            className={`max-w-[60%] bg-blue-100 mb-2 rounded-md p-2 px-4 flex flex-col
+                            className={`max-w-[60%] bg-blue-100 mb-2 rounded-md p-[6px] px-[14px] flex flex-col
                             ${user?.id === msgObj?.sender?._id ? "ml-auto" : "mr-auto"} text-wrap`}>
-                            <span>{msgObj?.content}</span>
+                            <span className="text-[15px]">{msgObj?.content}</span>
                             <span
-                                className={`text-[12px] text-black/50 font-semibold tracking-wide
+                                className={`text-[12px] text-black/50 font-semibold tracking-wide prevent-select
                                     ${user?.id === msgObj?.sender?._id ? "ml-auto" : "mr-auto"}`}>{getTime(msgObj?.createdAt)}</span>
                         </div>
                     </div>

@@ -9,7 +9,7 @@ interface ChatProps {
 
 const Chat = ({ currentChat, chatId, setChatList, chatList }: ChatProps) => {
     return (
-        <div className="h-screen">
+        <div className="flex flex-col">
             <Navbar currentChat={currentChat} />
             <ChatSection chatId={chatId} setChatList={setChatList} chatList={chatList} />
         </div>
