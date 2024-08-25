@@ -4,10 +4,10 @@ import { LOGIN_ROUTE, LOGOUT_ROUTE, REGISTER_ROUTE, STATUS_ROUTE } from "../api/
 const useApi = () => {
     const callApi = async (api: any, payload: any = null, params: any = null) => {
         // creating response object
-        let res = {
+        let res: any = {
             data: null,
             status: "OK",
-            error: false
+            error: null
         }
 
         switch (api) {
@@ -23,12 +23,13 @@ const useApi = () => {
                 }
             }
             case "LOGIN": {
+                let apiResponse;
                 try {
-                    let apiResponse = await axiosInstance.post(LOGIN_ROUTE, payload);
+                    apiResponse = await axiosInstance.post(LOGIN_ROUTE, payload);
                     res.data = apiResponse.data;
-                } catch (error) {
+                } catch (error: any) {
                     res.status = "NOT OK";
-                    res.error = true;
+                    res.error = error?.response?.data?.err;
                 } finally {
                     return res;
                 }
@@ -37,9 +38,9 @@ const useApi = () => {
                 try {
                     let apiResponse = await axiosInstance.post(REGISTER_ROUTE, payload);
                     res.data = apiResponse.data;
-                } catch (error) {
+                } catch (error: any) {
                     res.status = "NOT OK";
-                    res.error = true;
+                    res.error = error?.response?.data?.err;
                 } finally {
                     return res;
                 }

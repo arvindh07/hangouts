@@ -67,7 +67,7 @@ const Auth = () => {
         })
         return;
       }
-      const response: any = await callApi("LOGIN", { email: authDetails?.email, password: authDetails?.password });
+      const response: any = await callApi("LOGIN", { email: authDetails?.email, password: authDetails?.password });      
       if (response.status === "OK") {
         dispatch(appActions.setLogin(true));
         dispatch(appActions.setUser(response?.data));
@@ -77,7 +77,7 @@ const Auth = () => {
         dispatch(appActions.setLogin(false));
         toast({
           title: "Login failed",
-          description: "Something went wrong",
+          description: response?.error || "Something went wrong",
         })
         return;
       }
