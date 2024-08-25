@@ -73,7 +73,7 @@ const ChatSection = ({ chatId, setChatList, chatList }: any) => {
   }, [chatId])
 
   return (
-    <div className="flex flex-col grow h-200px border-2 border-yellow-400">
+    <div className="flex-1 flex flex-col overflow-hidden">
       <MessageSection messages={messages} chatId={chatId} />
       <UserInteraction chatId={chatId} setMessages={setMessages} setChatList={setChatList} />
     </div>

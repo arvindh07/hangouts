@@ -35,7 +35,7 @@ const UserInteraction = ({ chatId, setMessages, setChatList }: any) => {
   }
 
   return (
-    <div className="bg-gray-50 w-full pb-6">
+    <div className="bg-slate-100 w-full py-3">
       <div className="w-8/12 mx-auto flex justify-between">
       <input
         type="text"

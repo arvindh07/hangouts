@@ -98,7 +98,7 @@ const Home = () => {
   }, [])
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen overflow-hidden">
       {/* top navabr */}
       {/* navbar */}
       <div className="flex items-center px-10 py-3 justify-between bg-slate-900/95">
@@ -123,7 +123,7 @@ const Home = () => {
           </DropdownMenu>
         </div>
       </div>
-      <div className="flex grow">
+      <div className="flex-1 flex overflow-hidden">
         {/* main page */}
         <div className="flex flex-col w-1/4 max-w-[280px] bg-slate-900 pt-3">
           <div className="mb-3 mx-auto">
@@ -186,16 +186,16 @@ const Home = () => {
             const otherUser: any = getOtherUser(chat?.users, user);
 
             return (
-              <div key={chat?._id} className={`flex w-full space-x-2 items-center mb-0 p-2 text-white/70 cursor-pointer hover:bg-white/60 hover:text-black group
+              <div key={chat?._id} className={`flex w-full overflow-y-auto space-x-2 items-center mb-0 p-2 text-white/70 cursor-pointer hover:bg-white/60 hover:text-black group
             ${currentChatId === chat?._id ? "bg-white/80 text-black" : ""}`}
                 onClick={() => handleChat(otherUser, otherUser._id, chat?._id)}>
                 <div>
                   {/* left div */}
                   <img src={otherUser?.profilePic} alt="" className="w-9 h-9 rounded-full object-cover" />
                 </div>
-                <div className="flex grow flex-col">
+                <div className="flex flex-col">
                   {/* right div */}
-                  <div className="flex justify-between items-center grow pr-4">
+                  <div className="flex justify-between items-center pr-4">
                     {/* right-top */}
                     <span className={`text-md ${currentChatId === chat?._id ? "text-black font-semibold" : ""}`}>{capitalizeWords(otherUser?.username)}</span>
                     {chat?.unseenMessages
@@ -217,9 +217,9 @@ const Home = () => {
           })}
         </div>
         {/* show below only if friend is chosen */}
-        <div className="flex flex-col w-full bg-gray-200">
+        <div className="flex-1 flex flex-col overflow-y-auto flex-grow w-full bg-gray-200">
           {!currentChat
-            ? <div className="flex justify-center items-center w-full h-full flex-1">
+            ? <div className="flex justify-center items-center w-full h-full">
               <p>Click chat to see messages</p>
             </div>
             : <Chat currentChat={currentChat} chatId={currentChatId} setChatList={setChatList} chatList={chatList} />}

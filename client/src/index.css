@@ -92,7 +92,7 @@
 }
 
 body{
-  /* overflow-y: hidden; */
+  overflow: hidden;
 }
 
 .prevent-select {

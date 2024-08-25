@@ -28,7 +28,7 @@ const MessageSection = ({ messages, chatId }: any) => {
     }
 
     return (
-        <div ref={msgRef} className="overflow-y-auto message bg-gray-50 pt-2 pb-3 rounded-sm">
+        <div ref={msgRef} className="flex-1 overflow-y-auto message bg-gray-50 pt-2 pb-3 rounded-sm">
             {messages?.map((msgObj: any) => {
                 return (
                     <div
