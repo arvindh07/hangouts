@@ -98,10 +98,6 @@ export const getAllUsers = async (req, res, next) => {
     return res.status(200).json(users)
 }
 
-export const handleUser = () => {
-
-}
-
 export const handleLogout = (req, res, next) => {
     res.clearCookie(ACCESS_TOKEN);
     res.clearCookie(REFRESH_TOKEN, {
