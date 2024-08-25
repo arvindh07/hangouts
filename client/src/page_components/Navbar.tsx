@@ -8,7 +8,7 @@ interface NavbarProps {
 
 const Navbar = ({ currentChat, setChatListScreen }: NavbarProps) => {
   return (
-    <div className="bg-slate-400 flex items-center px-3 md:px-6 py-3 sticky top-0">
+    <div className="bg-slate-400 flex items-center px-3 md:px-6 py-3 static min-[501px]:sticky top-0">
       <div className="text-white md:hidden mr-2">
         <IoMdArrowRoundBack onClick={() => setChatListScreen((prev: any) => !prev)} />
       </div>
