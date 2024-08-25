@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
 
     socket.on("one-message", (messageObject) => {
         // loop through the room and send the msg
-        const {latestMsgObj} = messageObject;
+        const { latestMsgObj } = messageObject;
         // const chat = latestMsgObj;
         if (!latestMsgObj?.chatRoom?.users) return;
 
