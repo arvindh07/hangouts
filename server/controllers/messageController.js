@@ -38,15 +38,14 @@ export const handleCreateMessage = async (req, res, next) => {
 
 export const handleGetAllMessages = async (req, res, next) => {
     const { chatRoom } = req.body;
-    let chat = await Chat.find({
-        _id: chatRoom
-    })
+    let chat = await Chat.findById(chatRoom);
+    
     if (!chat) {
         return res.status(400).json({
             msg: "No chat room"
         })
     }
-    chat = chat[0];
+
     chat.unseenMessages = false;
     await chat.save();
     chat = await chat.populate("latestMessage", "content chatRoom sender updatedAt");
