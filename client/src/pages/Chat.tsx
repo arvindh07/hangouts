@@ -4,13 +4,14 @@ interface ChatProps {
     currentChat: any;
     chatId: string;
     setChatList: any;
-    chatList: any
+    chatList: any;
+    setChatListScreen: any;
 }
 
-const Chat = ({ currentChat, chatId, setChatList, chatList }: ChatProps) => {
+const Chat = ({ currentChat, chatId, setChatList, chatList, setChatListScreen }: ChatProps) => {
     return (
         <div className="flex-1 flex flex-col overflow-hidden">
-            <Navbar currentChat={currentChat} />
+            <Navbar currentChat={currentChat} setChatListScreen={setChatListScreen} />
             <ChatSection chatId={chatId} setChatList={setChatList} chatList={chatList} />
         </div>
     )

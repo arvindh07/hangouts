@@ -35,12 +35,13 @@ const UserInteraction = ({ chatId, setMessages, setChatList }: any) => {
   }
 
   return (
-    <div className="bg-slate-100 w-full py-3">
+    <div className="bg-slate-200 w-full py-3 sticky bottom-0">
       <div className="w-8/12 mx-auto flex justify-between">
       <input
         type="text"
-        className="border-2 border-black rounded-md py-2 px-4 w-10/12 mr-8"
+        className="border-2 border-black rounded-full py-2 px-6 w-10/12 mr-8"
         value={message}
+        placeholder="Your message"
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
@@ -48,7 +49,7 @@ const UserInteraction = ({ chatId, setMessages, setChatList }: any) => {
           }
         }} />
       <button
-        className="ml-4 w-2/12 rounded-md cursor-pointer hover:bg-slate-400 bg-gray-950 px-4 text-white"
+        className="ml-2 w-2/12 rounded-md cursor-pointer hover:bg-slate-400 bg-gray-950 px-4 text-white"
         onClick={handleSendMessage}>
         Send
       </button>
