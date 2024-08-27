@@ -1,12 +1,14 @@
 import express from "express";
 import cors from "cors";
 import http from "http";
+import dotenv from "dotenv";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouter.js";
 import chatRouter from "./routes/chatRouter.js";
 import messageRouter from "./routes/messageRouter.js";
 
+dotenv.config();
 // 1. initialization
 const app = express();
 const server = http.createServer(app);
