@@ -1,0 +1,12 @@
+{
+	local_certs
+}
+
+hangouts.localhost {
+	encode gzip
+    reverse_proxy frontend:5173
+}
+
+api.hangouts.localhost {
+	reverse_proxy api:6999
+}

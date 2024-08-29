@@ -16,7 +16,7 @@ const server = http.createServer(app);
 // 2. middlewares
 app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FE_DOMAIN,
     credentials: true
 }));
 app.use(express.json());
@@ -26,7 +26,7 @@ app.use(express.static("public"));
 const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: "http://localhost:5173"
+        origin: process.env.FE_DOMAIN
     }
 });
 io.on("connection", (socket) => {
