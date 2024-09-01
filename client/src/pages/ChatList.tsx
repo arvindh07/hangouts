@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 
 const ChatList = () => {
-    const [friendsList, setFriendsList] = useState<string[]>([])
+    const [friendsList, _] = useState<string[]>([])
     
     if(friendsList?.length === 0) {
         return <h1>No friends😒</h1>
