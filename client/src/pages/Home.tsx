@@ -35,7 +35,11 @@ import { BiPowerOff } from "react-icons/bi";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import ChatSkeleton from "../Skeleton/ChatSkeleton";
 
-export let socket: any = io("http://localhost:6999");
+export let socket: any = io("http://localhost:6999", {
+  reconnectionAttempts: 3,
+  reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000
+});
 
 const Home = () => {
   const navigate = useNavigate();
