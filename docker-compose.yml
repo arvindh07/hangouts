@@ -1,0 +1,47 @@
+name: hangouts
+
+services:
+  api:
+    container_name: hangouts-be
+    build:
+      context: ./server
+      target: production
+    restart: unless-stopped
+    env_file:
+      - ./server/.env
+    networks:
+      - hangouts
+  
+  frontend:
+    container_name: hangouts-fe
+    build:
+      context: ./client
+      target: production
+    restart: unless-stopped
+    command: npm run dev -- --host
+    networks:
+      - hangouts
+    depends_on:
+      - api
+  
+  caddy:
+    image: caddy:2.8.4-alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - hangouts
+    depends_on:
+      - frontend
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  hangouts:
+    driver: bridge

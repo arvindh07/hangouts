@@ -5,7 +5,7 @@ services:
     container_name: hangouts-be
     build:
       context: ./server
-      dockerfile: ./Dockerfile
+      target: development
     restart: unless-stopped
     ports:
       - 6999:6999
@@ -20,7 +20,7 @@ services:
     container_name: hangouts-fe
     build:
       context: ./client
-      dockerfile: ./Dockerfile
+      target: development
     restart: unless-stopped
     command: npm run dev -- --host
     ports:
