@@ -12,7 +12,7 @@ export const JWT_REFRESH_PATH = "/api/user/refresh";
 const tokenOptions = {
     httpOnly: true,
     secure: true,
-    sameSite: "Strict"
+    sameSite: "Lax"
 }
 
 export const accessTokenOptions = {
