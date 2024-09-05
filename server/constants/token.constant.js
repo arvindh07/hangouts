@@ -11,7 +11,7 @@ export const JWT_REFRESH_PATH = "/api/user/refresh";
 
 const tokenOptions = {
     httpOnly: true,
-    secure: process.env.ENV === "production",
+    secure: true,
     sameSite: "Strict"
 }
 
