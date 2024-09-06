@@ -38,7 +38,9 @@ import ChatSkeleton from "../Skeleton/ChatSkeleton";
 export let socket: any = io(import.meta.env.VITE_BACKEND_DOMAIN, {
   reconnectionAttempts: 3,
   reconnectionDelay: 1000,
-  reconnectionDelayMax: 5000
+  reconnectionDelayMax: 5000,
+  transports: ['websocket'],
+  withCredentials: true
 });
 
 const Home = () => {
@@ -107,6 +109,15 @@ const Home = () => {
     socket.on("connected", () => {
       console.log("Socket connected(Client side)🚀");
     })
+
+    // for debugging
+    socket.on('connect_error', (error: any) => {
+      console.error('WebSocket Connection Error:', error);
+    });
+    
+    socket.on('disconnect', (reason: any) => {
+      console.log('Disconnected:', reason);
+    });
 
     return (() => {
       socket.off("message")

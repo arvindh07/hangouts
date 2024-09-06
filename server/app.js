@@ -26,7 +26,8 @@ app.use(express.static("public"));
 const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: process.env.FE_DOMAIN
+        origin: process.env.FE_DOMAIN,
+        credentials: true
     }
 });
 io.on("connection", (socket) => {
@@ -54,6 +55,11 @@ io.on("connection", (socket) => {
             }
         });
     })
+
+    // for debugging
+    socket.on('disconnect', (reason) => {
+        console.log('A user disconnected:', socket.id, 'Reason:', reason);
+    });
 })
 
 // 4. routes
