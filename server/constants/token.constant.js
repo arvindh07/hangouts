@@ -12,8 +12,7 @@ export const JWT_REFRESH_PATH = "/api/user/refresh";
 const tokenOptions = {
     httpOnly: true,
     secure: true,
-    sameSite: "None",
-    domain: process.env.FE_DOMAIN
+    sameSite: "None"
 }
 
 export const accessTokenOptions = {
