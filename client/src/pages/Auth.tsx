@@ -106,7 +106,7 @@ const Auth = () => {
   }
 
   return (
-    <div className="h-screen mx-auto p-4 w-full overflow-hidden">
+    <div className="mx-auto p-4 w-full overflow-hidden">
       <Tabs defaultValue="login" className="w-[400px] mx-auto">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login" onClick={() => setLoginForm((prev) => !prev)}>Login</TabsTrigger>
